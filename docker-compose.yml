@@ -1,0 +1,46 @@
+version: '2'
+
+volumes:
+  esdata1:
+    driver: local
+  psql-data:
+    driver: local
+
+services:
+  db:
+    image: postgres:9.5.2
+    env_file:
+      - ./config/.env
+    volumes:
+      - psql-data:/var/lib/postgresql/data
+      - .:/shared
+    ports:
+      - 5432:5432
+
+  app:
+    build: .
+    command: python /application/src/manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+    volumes:
+      - ./application/:/application
+    env_file: ./application/src/.env
+    ports:
+      - "8000:8000"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.6.0
+    container_name: elasticsearch
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    volumes:
+      - esdata1:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
