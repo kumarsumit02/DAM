@@ -1,4 +1,4 @@
-# DAMS README
+# README
 
 Prerequisite : make sure you have docker engine installed on your machine 
 
