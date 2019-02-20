@@ -19,12 +19,12 @@ services:
 
   app:
     build: .
-    command: python /application/src/manage.py runserver 0.0.0.0:8000
+    entrypoint: /application/docker-entrypoint.sh
     depends_on:
       - db
     volumes:
       - ./application/:/application
-    env_file: ./application/src/.env
+    env_file: ./application/backend/.env
     ports:
       - "8000:8000"
 

@@ -6,7 +6,8 @@ ENV HOME /root
 ENV APP_HOME /application/
 ENV NODE_ENV production
 ENV C_FORCE_ROOT=true
-
+RUN apt-get install -y --no-install-recommends curl
+RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo bash -
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends build-essential \
         apt-transport-https \
@@ -28,9 +29,9 @@ RUN apt-get install -y --no-install-recommends build-essential \
         tk8.6-dev \
         python-tk \
         xmlsec1 \
-        ffmpeg
-
-RUN apt-get install -y --no-install-recommends python3-pil
+        ffmpeg \
+        nodejs \
+        python3-pil
 
 
 # Clean up APT and bundler when done.
@@ -53,13 +54,17 @@ RUN rm -rf /var/lib/apt/lists/* \
 
 
 RUN mkdir -p $APP_HOME
+#COPY /docker-entrypoint.sh $APP_HOME
 WORKDIR $APP_HOME
 
-ADD ./application/src/requirements.txt $APP_HOME/requirements.txt
+ADD ./application/backend/requirements.txt $APP_HOME/requirements.txt
 
 RUN pip install -r $APP_HOME/requirements.txt
- 
+WORKDIR $APP_HOME/frontend
+#RUN npm install
+
 RUN rm -rf requirements.txt
 
 ADD . $APP_HOME
+#RUN chmod +x $APP_HOME/docker-entrypoint.sh
 
