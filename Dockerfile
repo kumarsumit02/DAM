@@ -60,13 +60,7 @@ RUN mkdir -p $APP_HOME
 WORKDIR $APP_HOME
 
 ADD ./application/backend/requirements.txt $APP_HOME/requirements.txt
-
 RUN pip install -r $APP_HOME/requirements.txt
-WORKDIR $APP_HOME/frontend
-#RUN npm install
-
 RUN rm -rf requirements.txt
-
 ADD . $APP_HOME
-#RUN chmod +x $APP_HOME/docker-entrypoint.sh
 
