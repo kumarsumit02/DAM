@@ -6,8 +6,10 @@ ENV HOME /root
 ENV APP_HOME /application/
 ENV NODE_ENV production
 ENV C_FORCE_ROOT=true
-RUN apt-get install -y --no-install-recommends curl
-RUN curl -sL https://deb.nodesource.com/setup_10.x | sudo bash -
+
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends gnupg2 curl
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt-get update
 RUN apt-get install -y --no-install-recommends build-essential \
         apt-transport-https \
