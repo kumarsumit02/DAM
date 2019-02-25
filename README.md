@@ -16,7 +16,7 @@ http://localhost:8000
 and the React App on:
 http://localhost:3000
 
-# Rebuild Docker Images
+## Rebuild Docker Images
 If you make changes to python's requirements.txt or add Node packages in package.json, you'll need to rebuild the docker images using the following command:
 
 ` docker-compose up -d --build`
