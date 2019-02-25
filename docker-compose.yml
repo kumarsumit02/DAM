@@ -34,7 +34,6 @@ services:
     entrypoint: /application/react-entrypoint.sh
     volumes:
       - ./application/:/application
-    env_file: ./application/frontend/.env
     ports:
       - "3000:3000"
 
