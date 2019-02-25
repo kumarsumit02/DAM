@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /application/backendend
+cd /application/backend
 echo "Apply database migrations"
 python /application/backend/manage.py migrate
 
