@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.http import Http404
 from rest_framework.response import Response
 #import UserSerializer to define fields of user
-from user_management.serializers import UserSerializer
+from user_management.serializers_.serializer import UserSerializer
 from rest_framework.views import APIView
 from rest_framework import status
 
@@ -31,11 +31,6 @@ class UserList(APIView):
             serializer.save()                            #save the data if serializer is valid
             return Response(serializer.data, status=status.HTTP_201_CREATED)    #return a Response data with status code 201 as resource is created
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  #return a Response code 400 with errors as a BAD request
-
-    def delete(self, request, pk, format=None):         
-        user = self.get_object(pk)
-        user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class UserDetail(APIView):
