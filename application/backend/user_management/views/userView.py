@@ -24,13 +24,6 @@ class UserList(APIView):
         serializer = UserSerializer(users, many=True)    #define a serializer for user
         return Response(serializer.data)                 #return response using serializer data object
 
-    #function to post the data to database
-    def post(self, request, format=None):
-        serializer = UserSerializer(data=request.data)   #create a serializer object to init. the data
-        if serializer.is_valid():                        #condition to check for valid serialization data
-            serializer.save()                            #save the data if serializer is valid
-            return Response(serializer.data, status=status.HTTP_201_CREATED)    #return a Response data with status code 201 as resource is created
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  #return a Response code 400 with errors as a BAD request
 
 
 class UserDetail(APIView):
@@ -47,6 +40,15 @@ class UserDetail(APIView):
         user = self.get_object(pk)
         user = UserSerializer(user)
         return Response(user.data)
+
+    #function to post the data to database
+    def post(self, request, format=None):
+        serializer = UserSerializer(data=request.data)   #create a serializer object to init. the data
+        if serializer.is_valid():                        #condition to check for valid serialization data
+            serializer.save()                            #save the data if serializer is valid
+            return Response(serializer.data, status=status.HTTP_201_CREATED)    #return a Response data with status code 201 as resource is created
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  #return a Response code 400 with errors as a BAD request
+
 
     def put(self, request, pk, format=None):
         user = self.get_object(pk)

@@ -30,8 +30,6 @@ class userOrgList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
 class userOrgDetails(APIView):
     """
         Api to manage user organization data
@@ -39,6 +37,7 @@ class userOrgDetails(APIView):
 
     def get_object(self, pk):
         try:
+            return UserOrganization.objects.all(pk=pk)
             return Response({"message":"work fine"})
         except userModel.DoesNotExist:
             return Response({"message":"Exception occur"})
