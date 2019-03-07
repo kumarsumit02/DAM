@@ -46,7 +46,7 @@ class UserDetail(APIView):
         serializer = UserSerializer(data=request.data)   #create a serializer object to init. the data
         if serializer.is_valid():                        #condition to check for valid serialization data
             serializer.save()                            #save the data if serializer is valid
-            return Response(serializer.data, status=status.HTTP_201_CREATED)    #return a Response data with status code 201 as resource is created
+            return Response({"message":"record created successfully"}, status=status.HTTP_201_CREATED)    #return a Response data with status code 201 as resource is created
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)  #return a Response code 400 with errors as a BAD request
 
 
@@ -55,7 +55,7 @@ class UserDetail(APIView):
         serializer = UserSerializer(user, data = request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response({"message":"record updated successfully"})
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
