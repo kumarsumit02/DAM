@@ -17,9 +17,9 @@ urlpatterns = [
     url(r'^userOrganization/(?P<pk>[\w-]+)/$', userOrg.userOrgDetails.as_view(), name="user auth detail"),
 
 
-    url(r'^userOrganizations/',userRole.UserRoleList.as_view(), name="user role list" ),
+    url(r'^userRoles/',userRole.UserRoleList.as_view(), name="user role list" ),
     #get, put, delete user data
-    url(r'^userOrganization/(?P<pk>[\w-]+)/$', userRole.UserRoleDetails.as_view(), name="user role detail"),
+    url(r'^userRole/(?P<pk>[\w-]+)/$', userRole.UserRoleDetails.as_view(), name="user role detail"),
 
 
 
