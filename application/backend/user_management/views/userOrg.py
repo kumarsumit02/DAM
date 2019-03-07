@@ -22,13 +22,6 @@ class userOrgList(APIView):
         return Response(serializer.data)
 
 
-    def post(self, request, format=None):
-        serializer = UserOrgSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 class userOrgDetails(APIView):
     """
@@ -37,17 +30,34 @@ class userOrgDetails(APIView):
 
     def get_object(self, pk):
         try:
-            return UserOrganization.objects.all(pk=pk)
-            return Response({"message":"work fine"})
+            return UserOrganization.objects.get(username=pk)
         except userModel.DoesNotExist:
-            return Response({"message":"Exception occur"})
+            raise Http404
+
     def get(self, request, pk, format=None):
-        return Response({"message":"get works fine"})
+        userOrg = self.get_object(pk)
+        userOrg = UserOrgSerializer(userOrg)
+        return Response(userOrg.data)
+
+    def post(self, request, format=None):
+        serializer = UserOrgSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        return Response({"message":"delete works fine"})
+        userOrg = self.get_object(pk)
+        userOrg.delete()
+        return Response({"message":"deleted"},status=status.HTTP_204_NO_CONTENT)
+
     def put(self, request, pk, format=None):
-        return Response({"message":"put works fine"})
+        userOrg = self.get_object(pk)
+        serializer = UserOrgSerializer(userOrg, data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 
 
 def message(self):
