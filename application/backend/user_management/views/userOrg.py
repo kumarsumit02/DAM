@@ -7,14 +7,13 @@ from user_management.models import userModel
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework import status
-from user_management.serializers_.serializer import UserOrgSerializer
+from user_management.serializers.User_Serializer import UserOrgSerializer
 from django.db import connection
 cursor = connection.cursor()
 from user_management.models.userModel import UserOrganization
 
 #class to implement user organization
 class userOrgList(APIView):
-
     def get(self, request):
         #usersOrg = userOrganization.objects.all()             #get all the users from User object
         usersOrg = UserOrganization.objects.all()
@@ -27,7 +26,6 @@ class userOrgDetails(APIView):
     """
         Api to manage user organization data
     """
-
     def get_object(self, pk):
         try:
             return UserOrganization.objects.get(user_id=pk)

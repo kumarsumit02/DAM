@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'user_management',
+    'django_saml2_auth',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,33 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+#saml2 configuration setting for Okta sso authentication
+
+SAML2_AUTH = {
+    # Metadata is required, choose either remote url or local file path
+    'METADATA_AUTO_CONF_URL': 'https://galepartnersgaledam.okta.com/app/exkch96qkQK1Aa2Pr356/sso/saml/metadata',
+
+    # Optional settings below
+    'DEFAULT_NEXT_URL': '/home',  # Custom target redirect URL after the user get logged in. Default to /admin if not set. This setting will be overwritten if you have parameter ?next= specificed in the login URL.
+    'CREATE_USER': 'TRUE', # Create a new Django user when a new user logs in. Defaults to True.
+    'NEW_USER_PROFILE': {
+        'USER_GROUPS': [],  # The default group name when a new user logs in
+        'ACTIVE_STATUS': True,  # The default active status for new users
+        'STAFF_STATUS': True,  # The staff status for new users
+        'SUPERUSER_STATUS': False,  # The superuser status for new users
+    },
+    'ATTRIBUTES_MAP': {
+        'email': 'Email',
+        'username': 'Email',
+        'first_name': 'FirstName',
+        'last_name': 'LastName',
+    },
+    'ENTITY_ID': 'http://localhost:8000/saml2_auth/acs/', # Populates the Issuer element in authn request
+
+}
+
 
 ROOT_URLCONF = 'dams_api.urls'
 
