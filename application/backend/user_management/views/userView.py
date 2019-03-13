@@ -28,7 +28,6 @@ class UserList(APIView):
         return Response(serializer.data)                 #return response using serializer data object
 
 
-
 #class to list the detail about user if present
 class UserDetail(APIView):
     """
