@@ -19,7 +19,6 @@ from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, get_user_model
-from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.template import TemplateDoesNotExist
 from django.http import HttpResponseRedirect
@@ -126,6 +125,7 @@ def _get_saml_client(domain):
     saml_client = Saml2Client(config=spConfig)
     return saml_client
 
+
 @login_required
 def welcome(r):
     try:
@@ -134,8 +134,10 @@ def welcome(r):
     except TemplateDoesNotExist:
         return HttpResponseRedirect(_default_next_url())
 
+
 def denied(r):
     return render(r, 'django_saml2_auth/denied.html')
+
 
 def _create_new_user(username, email, firstname, lastname):
     user = User.objects.create_user(username, email)
@@ -152,6 +154,7 @@ def _create_new_user(username, email, firstname, lastname):
     user.save()
     return user
 
+
 @csrf_exempt
 def acs(r):
     saml_client = _get_saml_client(get_current_domain(r))
@@ -162,8 +165,7 @@ def acs(r):
     if not resp:
         return HttpResponseRedirect(get_reverse([denied, 'denied', 'django_saml2_auth:denied']))
 
-    authn_response = saml_client.parse_authn_request_response(
-            resp, entity.BINDING_HTTP_POST)
+    authn_response = saml_client.parse_authn_request_response(resp, entity.BINDING_HTTP_POST)
 
     if authn_response is None:
         return HttpResponseRedirect(get_reverse([denied, 'denied', 'django_saml2_auth:denied']))
@@ -209,6 +211,7 @@ def acs(r):
             return HttpResponseRedirect(next_url)
     else:
         return HttpResponseRedirect(next_url)
+
 
 def signin(r):
     try:
