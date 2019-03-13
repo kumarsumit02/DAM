@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 
 from rest_framework.views import APIView
-from user_management.models import userModel
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework import status
@@ -31,7 +30,7 @@ class UserOrgDetails(APIView):
     def get_object(self, pk):
         try:
             return UserOrganization.objects.get(user_id=pk)
-        except userModel.DoesNotExist:
+        except Exception:
             raise Http404
 
     def get(self, request, pk, format=None):

@@ -1,22 +1,19 @@
 from __future__ import unicode_literals
-from django.shortcuts import render
-from django.http import HttpResponse
 
 from rest_framework.views import APIView
-from user_management.models import userModel
 from django.http import Http404
 from rest_framework.response import Response
 from rest_framework import status
+from user_management.models.userModel import Role
 from user_management.serializers.User_Serializer import RoleSerializer
 from django.db import connection
 cursor = connection.cursor()
-from user_management.models.userModel import Role
 
-#class to implement user organization
+
 class RoleList(APIView):
     def get(self, request):
         roles = Role.objects.all()
-        serializer = RoleSerializer(roles, many=True)    #define a serializer for role
+        serializer = RoleSerializer(roles, many=True)
         return Response(serializer.data)
 
 
@@ -24,10 +21,12 @@ class RoleDetails(APIView):
     """
         Api to manage user organization data
     """
+
     def get_object(self, pk):
         try:
-            return Role.objects.get(user_id=pk)
-        except userModel.DoesNotExist: #handle this execption
+            return Role.objects.get(role_id=pk)
+
+        except Exception:
             raise Http404
 
     def get(self, request, pk, format=None):
@@ -49,8 +48,8 @@ class RoleDetails(APIView):
 
     def put(self, request, pk, format=None):
         role = self.get_object(pk)
-        serializer = RoleSerializer(role, data = request.data)
+        serializer = RoleSerializer(role, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
