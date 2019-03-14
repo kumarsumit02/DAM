@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-
+import ipdb
 from rest_framework.views import APIView
 from django.http import Http404
 from rest_framework.response import Response
@@ -24,7 +24,6 @@ class UserRoleList(APIView):
 
         res = []
         user_id = []
-
 
         for i in range(len(serializer.data)):
 
@@ -52,14 +51,28 @@ class UserRoleDetails(APIView):
 
     def get_object(self, pk):
         try:
-            return UserRole.objects.get(user_id=pk)
+            ipdb.set_trace()
+            return UserRole.objects.get(user_id = 1)
         except Exception:
             raise Http404
 
     def get(self, request, pk, format=None):
         userRole = self.get_object(pk)
-        userRole = UserRoleSerializer(userRole)
-        return Response(userRole.data)
+        serializer = UserRoleSerializer(userRole)
+        res = []
+        res.append(serializer.data)
+        # res = []
+        # role_arr = []
+        # for j in range(len(serializer.data)):
+        #     if serializer.data[j]['user_id'] == pk:
+        #         role_name = Role.objects.get(role_id = serializer.data[j]['role_id'])
+        #         role_name = RoleSerializer(role_name)
+        #         role_name = role_name.data['role_name']
+        #         role_arr.append({"role_id":serializer.data[j]['role_id'], "role_name":role_name})
+        # res.append({"user_id": pk, "roles": role_arr})
+
+        
+        return Response(res)
 
     def post(self, request, format=None):
         serializer = UserRoleSerializer(data=request.data)

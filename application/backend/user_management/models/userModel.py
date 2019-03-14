@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+import uuid
 
 class Organization(models.Model):
     # organization_id as primary_key
@@ -22,23 +22,28 @@ class Role(models.Model):
 
 
 class UserOrganization(models.Model):
-    class Meta:
-        # creating composite key
-        unique_together = (('organization_id', 'user_id'),)
+    #primary key for userOrg. table
+    user_org_id = models.AutoField(primary_key=True)
     # refrence user_id to Django User model id as ForeignKey
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     # refrence organization_id to Organization model organization_id as ForeignKey
     organization_id = models.ForeignKey(Organization, on_delete=models.CASCADE)
-
+    class Meta:
+        # creating composite key
+        unique_together = (('organization_id', 'user_id'),)
+    
 # # model for creating UserRoles table
 # # multi-value table so user can have multiple roles
 
 
 class UserRole(models.Model):
-    class Meta:
-        # creating composite key
-        unique_together = (('user_id', 'role_id'),)
+    #primary_key for userRole table
+    user_role_id = models.AutoField(primary_key=True)
     # refrence user_id to Django User model id as ForeignKey
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     # refrence role_id to Role model role_id as ForeignKey
     role_id = models.ForeignKey(Role, on_delete=models.CASCADE)
+    class Meta:
+        # creating composite key
+        unique_together = (('user_id', 'role_id'),)
+    

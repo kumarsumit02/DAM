@@ -6,8 +6,8 @@ from rest_framework.response import Response
 from rest_framework import status
 
 
-from user_management.models.userModel import UserOrganization
-from user_management.serializers.User_Serializer import UserOrgSerializer
+from user_management.models.userModel import UserOrganization, Organization
+from user_management.serializers.User_Serializer import UserOrgSerializer, OrganizationSerializer
 from django.db import connection
 cursor = connection.cursor()
 
@@ -18,8 +18,30 @@ class UserOrgList(APIView):
     def get(self, request):
         usersOrg = UserOrganization.objects.all()
         # define a serializer for userOrg
-        serializer = UserOrgSerializer(usersOrg, many=True)
-        return Response(serializer.data)
+
+        serializer = UserOrgSerializer(usersOrg, many=True)  
+        res = []
+        user_id = []
+
+        #record users presents in the table
+        for i in range(len(serializer.data)):
+
+            if serializer.data[i]['user_id'] not in user_id:
+
+                user_id.append(serializer.data[i]['user_id'])
+
+        #creataing JSON object which will collectively contains the organization for users
+        for i in range(len(user_id)):
+            org_arr = []
+            for j in range(len(serializer.data)):
+                if serializer.data[j]['user_id'] == user_id[i]:
+                    org_name = Organization.objects.get(organization_id=serializer.data[j]['organization_id'])
+                    org_name = OrganizationSerializer(org_name)
+                    org_name = org_name.data['organization_name']
+                    org_arr.append({"org_id": serializer.data[j]['organization_id'], "organization_name": org_name})
+            res.append({"user_id": user_id[i], "organizations": org_arr})
+
+        return Response(res)
 
 
 class UserOrgDetails(APIView):

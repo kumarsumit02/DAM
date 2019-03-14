@@ -13,13 +13,13 @@ class UserSerializer(serializers.ModelSerializer):
 class UserOrgSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserOrganization
-        fields = ('user_id', 'organization_id')
+        fields = ('user_org_id', 'user_id', 'organization_id')
 
 
 class UserRoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserRole
-        fields = ('user_id', 'role_id')
+        fields = ('user_role_id', 'user_id', 'role_id')
 
 
 class RoleSerializer(serializers.ModelSerializer):

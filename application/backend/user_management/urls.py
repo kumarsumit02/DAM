@@ -26,7 +26,7 @@ urlpatterns = [
 
 
     # get all user roles
-    url(r'^userRoles/', user_Role.UserRoleList.as_view(), name="listUserRole"),
+    url(r'^userroles/', user_Role.UserRoleList.as_view(), name="listUserRole"),
     # post user_roles data
     url(r'^addUserRole/', user_Role.UserRoleDetails.as_view(), name="PostUserRole"),
     # get, put, delete user data
