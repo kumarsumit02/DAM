@@ -15,13 +15,18 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from django_saml2_auth import views
+from django_saml2_auth.views import welcome
+
 urlpatterns = [
+
     url(r'^admin/', admin.site.urls),
+
     #include saml2_auth app authentication requiered for SSO authentication login urls
     url(r'^saml2_auth/', include('django_saml2_auth.urls'), name='django_saml2_auth'),
+
     #home url with welcome message
-    url(r'^home/', views.welcome, name='home'),
+    url(r'^home/', welcome, name='home'),
+
     #user_management application urls included
     url('user_management/', include('user_management.urls', namespace='user_management')),
 

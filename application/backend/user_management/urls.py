@@ -1,56 +1,55 @@
 from django.conf.urls import url
 
-from .views import user, org, role, user_Org, user_Role
+from user_management.views.user import UsersList, UserDetails
+from user_management.views.org import OrganizationsList, OrganizationDetails
+from user_management.views.role import RolesList, RoleDetails
+from user_management.views.user_org import UserOrgsList, UserOrgDetails
+from user_management.views.user_role import UserRolesList, UserRoleDetails
 
 urlpatterns = [
 
-
-    # get all users list
-    url(r'^users', user.UserList.as_view(), name="listUsers"),
-    # post user data
-    url(r'^adduser/', user.UserDetail.as_view(), name="newUser"),
+    # list all users list
+    url(r'^users', UsersList.as_view(), name="list_users"),
+    # create user data
+    url(r'^add_user/', UserDetails.as_view(), name="new_user"),
     # get, put, delete user data with parameters
-    url(r'^user/(?P<pk>[\w-]+)$', user.UserDetail.as_view(), name="getUser"),
+    url(r'^user/(?P<pk>[\w-]+)$', UserDetails.as_view(), name="user_detail"),
 
 
-    # get all the users organization data
-    url(r'^userOrganizations/', user_Org.UserOrgList.as_view(),
-        name="listUsersOrganization"),
-    # post userOrganization data
-    url(r'^adduserOrganization/', user_Org.UserOrgDetails.as_view(),
-        name="PostUserOrganization"),
+    # list all the users organization data
+    url(r'^user_organizations/', UserOrgsList.as_view(),
+        name="list_users_organization"),
+    # create userOrganization data
+    url(r'^add_user_organization/', UserOrgDetails.as_view(),
+        name="add_user_organization"),
     # get, put, delete user data
     url(r'^userOrganization/(?P<pk>[\w-]+)/$',
-        user_Org.UserOrgDetails.as_view(), name="user auth detail"),
+        UserOrgDetails.as_view(), name="user_organization_detail"),
 
 
-
-    # get all user roles
-    url(r'^userroles/', user_Role.UserRoleList.as_view(), name="listUserRole"),
-    # post user_roles data
-    url(r'^addUserRole/', user_Role.UserRoleDetails.as_view(), name="PostUserRole"),
+    # list all user roles
+    url(r'^user_roles/', UserRolesList.as_view(), name="list_users_roles"),
+    # create user_roles data
+    url(r'^add_user_role/', UserRoleDetails.as_view(), name="new_user_role"),
     # get, put, delete user data
-    url(r'^userRole/(?P<pk>[\w-]+)/$',
-        user_Role.UserRoleDetails.as_view(), name="getUserRole"),
+    url(r'^user_role/(?P<pk>[\w-]+)/$',
+        UserRoleDetails.as_view(), name="user_role_detail"),
 
 
-
-    # get all organization
-    url(r'^organizations/', org.OrganizationList.as_view(), name="listUserRole"),
-    # post organization data
-    url(r'^addorganization/', org.OrganizationDetails.as_view(), name="PostUserRole"),
+    # list all organization
+    url(r'^organizations/', OrganizationsList.as_view(), name="list_organizations"),
+    # create organization data
+    url(r'^add_organization/', OrganizationDetails.as_view(), name="new_organization"),
     # get, put, delete user data
-    url(r'^organization/(?P<pk>[\w-]+)/$',org.OrganizationDetails.as_view(), name="getUserRole"),
+    url(r'^organization/(?P<pk>[\w-]+)/$', OrganizationDetails.as_view(), name="organization_detail"),
 
 
-
-
-    # get all roles
-    url(r'^roles/', role.RoleList.as_view(), name="listRole"),
-    # post new role data
-    url(r'^addrole/', role.RoleDetails.as_view(), name="PostRole"),
+    # list all roles
+    url(r'^roles/', RolesList.as_view(), name="list_role"),
+    # create new role data
+    url(r'^add_role/', RoleDetails.as_view(), name="new_role"),
     # get, put, delete user data
-    url(r'^role/(?P<pk>[\w-]+)/$', role.RoleDetails.as_view(), name="getRole"),
+    url(r'^role/(?P<pk>[\w-]+)/$', RoleDetails.as_view(), name="role_detail"),
 
 
 ]

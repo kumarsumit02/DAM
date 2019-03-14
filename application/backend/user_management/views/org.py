@@ -1,21 +1,20 @@
 from __future__ import unicode_literals
 
-from rest_framework.views import APIView
+
 from django.http import Http404
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-from user_management.models.userModel import Organization
-from user_management.serializers.User_Serializer import OrganizationSerializer
-from django.db import connection
-cursor = connection.cursor()
+from user_management.models.management_model import Organization
+from user_management.serializers.user_serializer import OrganizationSerializer
 
 
-class OrganizationList(APIView):
+class OrganizationsList(APIView):
     def get(self, request):
-        orgs = Organization.objects.all()
-        serializer = OrganizationSerializer(orgs, many=True)
+        organizations = Organization.objects.all()
+        serializer = OrganizationSerializer(organizations, many=True)
         return Response(serializer.data)
 
 

@@ -1,30 +1,28 @@
 from __future__ import unicode_literals
-import ipdb
-from rest_framework.views import APIView
 from django.http import Http404
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-from user_management.models.userModel import UserRole, Role
-from user_management.serializers.User_Serializer import UserRoleSerializer, RoleSerializer
-from django.db import connection
-cursor = connection.cursor()
+from user_management.models.management_model import UserRole, Role
+from user_management.serializers.user_serializer import UserRoleSerializer, RoleSerializer
+
 
 # class to implement user organization
 
 
-class UserRoleList(APIView):
+class UserRolesList(APIView):
 
     def get(self, request):
         usersRole = UserRole.objects.all()
         # define a serializer for userRole
         serializer = UserRoleSerializer(usersRole, many=True)
-        #res = serializer.data
 
         res = []
         user_id = []
 
+        #record all users id present in users table into user_id
         for i in range(len(serializer.data)):
 
             if serializer.data[i]['user_id'] not in user_id:
@@ -35,9 +33,9 @@ class UserRoleList(APIView):
             role_arr = []
             for j in range(len(serializer.data)):
                 if serializer.data[j]['user_id'] == user_id[i]:
-                    role_name = Role.objects.get(role_id = serializer.data[j]['role_id'])
-                    role_name = RoleSerializer(role_name)
-                    role_name = role_name.data['role_name']
+                    role_name = Role.objects.get(role_id=serializer.data[j]['role_id'])
+                    role_serializer = RoleSerializer(role_name)
+                    role_name = role_serializer.data['role_name']
                     role_arr.append({"role_id":serializer.data[j]['role_id'], "role_name":role_name})
             res.append({"user_id": user_id[i], "roles": role_arr})
 
@@ -51,27 +49,21 @@ class UserRoleDetails(APIView):
 
     def get_object(self, pk):
         try:
-            ipdb.set_trace()
-            return UserRole.objects.get(user_id = 1)
+            return UserRole.objects.filter(user_id=pk)
         except Exception:
             raise Http404
 
     def get(self, request, pk, format=None):
-        userRole = self.get_object(pk)
-        serializer = UserRoleSerializer(userRole)
+        user_role = self.get_object(pk)
+        serializer = UserRoleSerializer(user_role, many=True)
         res = []
-        res.append(serializer.data)
-        # res = []
-        # role_arr = []
-        # for j in range(len(serializer.data)):
-        #     if serializer.data[j]['user_id'] == pk:
-        #         role_name = Role.objects.get(role_id = serializer.data[j]['role_id'])
-        #         role_name = RoleSerializer(role_name)
-        #         role_name = role_name.data['role_name']
-        #         role_arr.append({"role_id":serializer.data[j]['role_id'], "role_name":role_name})
-        # res.append({"user_id": pk, "roles": role_arr})
-
-        
+        role_arr = []
+        for j in range(len(serializer.data)):
+            role_name = Role.objects.get(role_id=serializer.data[j]['role_id'])
+            role_serializer = RoleSerializer(role_name)
+            role_name = role_serializer.data['role_name']
+            role_arr.append({"role_id": serializer.data[j]['role_id'], "role_name": role_name})
+        res.append({"user_id": pk, "roles": role_arr})
         return Response(res)
 
     def post(self, request, format=None):
@@ -82,14 +74,6 @@ class UserRoleDetails(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        userRole = self.get_object(pk)
-        userRole.delete()
-        return Response({"message": "deleted"}, status=status.HTTP_204_NO_CONTENT)
-
-    def put(self, request, pk, format=None):
-        userRole = self.get_object(pk)
-        serializer = UserRoleSerializer(userRole, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        user_role = self.get_object(pk)
+        user_role.delete()
+        return Response({"message": "record deleted"}, status=status.HTTP_204_NO_CONTENT)

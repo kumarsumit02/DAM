@@ -1,16 +1,15 @@
 from __future__ import unicode_literals
 
-from rest_framework.views import APIView
 from django.http import Http404
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from user_management.models.userModel import Role
-from user_management.serializers.User_Serializer import RoleSerializer
-from django.db import connection
-cursor = connection.cursor()
+
+from user_management.models.management_model import Role
+from user_management.serializers.user_serializer import RoleSerializer
 
 
-class RoleList(APIView):
+class RolesList(APIView):
     def get(self, request):
         roles = Role.objects.all()
         serializer = RoleSerializer(roles, many=True)

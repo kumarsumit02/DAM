@@ -9,12 +9,12 @@ from rest_framework.response import Response
 
 
 from django.contrib.auth.models import User
-from user_management.serializers.User_Serializer import UserSerializer
+from user_management.serializers.user_serializer import UserSerializer
 
 # create a userlist class to list all users or create a new one if now present
 
 
-class UserList(APIView):
+class UsersList(APIView):
     """
         List all users, or create a new user
     """
@@ -29,7 +29,7 @@ class UserList(APIView):
 
 
 # class to list the detail about user if present
-class UserDetail(APIView):
+class UserDetails(APIView):
     """
         retrieve, update or delete the user instance
     """

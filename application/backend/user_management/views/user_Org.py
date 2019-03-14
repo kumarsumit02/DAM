@@ -1,25 +1,25 @@
 from __future__ import unicode_literals
 
-from rest_framework.views import APIView
+
 from django.http import Http404
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 
-from user_management.models.userModel import UserOrganization, Organization
-from user_management.serializers.User_Serializer import UserOrgSerializer, OrganizationSerializer
-from django.db import connection
-cursor = connection.cursor()
+from user_management.models.management_model import UserOrganization, Organization
+from user_management.serializers.user_serializer import UserOrgSerializer, OrganizationSerializer
+
 
 # class to implement user organization
 
 
-class UserOrgList(APIView):
+class UserOrgsList(APIView):
     def get(self, request):
-        usersOrg = UserOrganization.objects.all()
+        users_org = UserOrganization.objects.all()
         # define a serializer for userOrg
 
-        serializer = UserOrgSerializer(usersOrg, many=True)  
+        serializer = UserOrgSerializer(users_org, many=True)
         res = []
         user_id = []
 
@@ -51,14 +51,26 @@ class UserOrgDetails(APIView):
 
     def get_object(self, pk):
         try:
-            return UserOrganization.objects.get(user_id=pk)
+            return UserOrganization.objects.filter(user_id=pk)
         except Exception:
             raise Http404
 
     def get(self, request, pk, format=None):
-        userOrg = self.get_object(pk)
-        userOrg = UserOrgSerializer(userOrg)
-        return Response(userOrg.data)
+        user_org = self.get_object(pk)
+        serializer = UserOrgSerializer(user_org, many=True)
+
+        res = []
+        org_arr = []
+
+        for j in range(len(serializer.data)):
+            org_name = Organization.objects.get(organization_id=serializer.data[j]['organization_id'])
+            org_name = OrganizationSerializer(org_name)
+            org_name = org_name .data['organization_name']
+            org_arr.append({"organization_id": serializer.data[j]['organization_id'], "organization_name": org_name})
+
+        res.append({"user_id": pk, "organizations": org_arr})
+
+        return Response(res)
 
     def post(self, request, format=None):
         serializer = UserOrgSerializer(data=request.data)
@@ -68,14 +80,6 @@ class UserOrgDetails(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
-        userOrg = self.get_object(pk)
-        userOrg.delete()
+        user_org = self.get_object(pk)
+        user_org.delete()
         return Response({"message": "deleted"}, status=status.HTTP_204_NO_CONTENT)
-
-    def put(self, request, pk, format=None):
-        userOrg = self.get_object(pk)
-        serializer = UserOrgSerializer(userOrg, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

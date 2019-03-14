@@ -2,10 +2,8 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from .models.userModel import UserOrganization, UserRole, Role, Organization
+from user_management.models.management_model import UserOrganization, UserRole, Role, Organization
 
-
-# Register your models here.
 
 admin.site.register(Organization)
 admin.site.register(Role)

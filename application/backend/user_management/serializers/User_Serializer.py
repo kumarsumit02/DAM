@@ -1,7 +1,7 @@
 
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from user_management.models.userModel import UserOrganization, UserRole, Role, Organization
+from user_management.models.management_model import UserOrganization, UserRole, Role, Organization
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -13,13 +13,13 @@ class UserSerializer(serializers.ModelSerializer):
 class UserOrgSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserOrganization
-        fields = ('user_org_id', 'user_id', 'organization_id')
+        fields = ('user_id', 'organization_id')
 
 
 class UserRoleSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserRole
-        fields = ('user_role_id', 'user_id', 'role_id')
+        fields = ('user_id', 'role_id')
 
 
 class RoleSerializer(serializers.ModelSerializer):
