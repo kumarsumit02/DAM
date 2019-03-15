@@ -36,8 +36,8 @@ class UserOrgsList(APIView):
             for j in range(len(serializer.data)):
                 if serializer.data[j]['user_id'] == user_id[i]:
                     org_name = Organization.objects.get(organization_id=serializer.data[j]['organization_id'])
-                    org_name = OrganizationSerializer(org_name)
-                    org_name = org_name.data['organization_name']
+                    org_serializer = OrganizationSerializer(org_name)
+                    org_name = org_serializer.data['organization_name']
                     org_arr.append({"org_id": serializer.data[j]['organization_id'], "organization_name": org_name})
             res.append({"user_id": user_id[i], "organizations": org_arr})
 
@@ -64,8 +64,8 @@ class UserOrgDetails(APIView):
 
         for j in range(len(serializer.data)):
             org_name = Organization.objects.get(organization_id=serializer.data[j]['organization_id'])
-            org_name = OrganizationSerializer(org_name)
-            org_name = org_name .data['organization_name']
+            org_serializer = OrganizationSerializer(org_name)
+            org_name = org_serializer.data['organization_name']
             org_arr.append({"organization_id": serializer.data[j]['organization_id'], "organization_name": org_name})
 
         res.append({"user_id": pk, "organizations": org_arr})
