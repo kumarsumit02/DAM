@@ -37,7 +37,7 @@ class OrganizationDetails(APIView):
         serializer = OrganizationSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"message":"record added successfully"}, status=status.HTTP_201_CREATED)
+            return Response({"message": "record added successfully"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk, format=None):
