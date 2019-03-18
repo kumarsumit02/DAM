@@ -22,11 +22,11 @@ class UserOrgsList(APIView):
         # get user_id and roles of the user
         user_orgs = UserOrganization.objects.values('user_id', 'organization_id')
         # getting all role_id and role_names
-        orgs = Organization.objects.values_list('organization_id', 'organization_name')
+        orgs = list(Organization.objects.values('organization_id', 'organization_name'))
 
         orgs_dict = {}
-        for org in range(len(orgs)):
-            orgs_dict.__setitem__(orgs[org][0], orgs[org][1])
+        for org in orgs:
+            orgs_dict[org['organization_id']] = org['organization_name']
 
         res = []
         for i in range(len(user_ids)):
@@ -54,11 +54,11 @@ class UserOrgDetails(APIView):
         user_orgs = self.get_object(pk)
         serializer = UserOrgSerializer(user_orgs, many=True)
 
-        orgs = Organization.objects.values_list('organization_id', 'organization_name')
+        orgs = list(Organization.objects.values('organization_id', 'organization_name'))
 
         orgs_dict = {}
-        for org in range(len(orgs)):
-            orgs_dict.__setitem__(orgs[org][0], orgs[org][1])
+        for org in orgs:
+            orgs_dict[org['organization_id']] = org['organization_name']
 
         user_orgs = serializer.data
         organizations = []

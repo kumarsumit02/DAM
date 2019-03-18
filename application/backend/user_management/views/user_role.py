@@ -26,11 +26,11 @@ class UserRolesList(APIView):
         #get user_id and roles of the user
         user_roles = UserRole.objects.values('user_id', 'role_id')
         #getting all role_id and role_names
-        roles = Role.objects.values_list('role_id', 'role_name')
+        roles = list(Role.objects.values('role_id', 'role_name'))
 
         roles_dict = {}
-        for role in range(len(roles)):
-            roles_dict.__setitem__(roles[role][0], roles[role][1])
+        for role in roles:
+            roles_dict[role['role_id']] = role['role_name']
 
         res = []
         for i in range(len(user_ids)):
@@ -54,32 +54,21 @@ class UserRoleDetails(APIView):
             raise Http404
 
     def get(self, request, pk, format=None):
-        # user_role = self.get_object(pk)
-        # serializer = UserRoleSerializer(user_role, many=True)
-        # res = []
-        # role_arr = []
-        # for j in range(len(serializer.data)):
-        #     role_name = Role.objects.get(role_id=serializer.data[j]['role_id'])
-        #     role_serializer = RoleSerializer(role_name)
-        #     role_name = role_serializer.data['role_name']
-        #     role_arr.append({"role_id": serializer.data[j]['role_id'], "role_name": role_name})
-        # res.append({"user_id": pk, "roles": role_arr})
-        # return Response(res)
 
         user_roles = self.get_object(pk)
         serializer = UserRoleSerializer(user_roles, many=True)
 
-        roles = Role.objects.values_list('role_id', 'role_name')
+        roles = list(Role.objects.values('role_id', 'role_name'))
 
         roles_dict = {}
-        for role in range(len(roles)):
-            roles_dict.__setitem__(roles[role][0], roles[role][1])
+        for role in roles:
+            roles_dict[role['role_id']] = role['role_name']
 
         user_roles = serializer.data
         roles = []
         for user_role in user_roles:
             roles.append({"role_id":user_role['role_id'], "role_name":roles_dict[user_role['role_id']]})
-        res = {"user_id":pk,"roles":roles}    
+        res = {"user_id":pk,"roles":roles}
 
         return Response(res)
 

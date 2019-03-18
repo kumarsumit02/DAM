@@ -20,6 +20,7 @@ services:
   app:
     build: .
     entrypoint: /application/django-entrypoint.sh
+    #command: tail -f /dev/null
     depends_on:
       - db
       - fe-app
