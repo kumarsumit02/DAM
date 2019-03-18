@@ -4,17 +4,7 @@
 from __future__ import unicode_literals
 
 from django.shortcuts import render
-
-from saml2 import (
-    BINDING_HTTP_POST,
-    BINDING_HTTP_REDIRECT,
-    entity,
-)
-from saml2.client import Saml2Client
-from saml2.config import Config as Saml2Config
-
 from django import get_version
-from pkg_resources import parse_version
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
@@ -24,7 +14,17 @@ from django.template import TemplateDoesNotExist
 from django.http import HttpResponseRedirect
 from django.utils.http import is_safe_url
 
+from pkg_resources import parse_version
 from rest_auth.utils import jwt_encode
+
+
+from saml2 import (
+    BINDING_HTTP_POST,
+    BINDING_HTTP_REDIRECT,
+    entity,
+)
+from saml2.client import Saml2Client
+from saml2.config import Config as Saml2Config
 
 # default User or custom User. Now both will work.
 User = get_user_model()

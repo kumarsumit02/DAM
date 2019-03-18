@@ -23,7 +23,7 @@ urlpatterns = [
     url(r'^add_user_organization/', UserOrgDetails.as_view(),
         name="add_user_organization"),
     # get, put, delete user data
-    url(r'^userOrganization/(?P<pk>[\w-]+)/$',
+    url(r'^user_organization/(?P<pk>[\w-]+)/$',
         UserOrgDetails.as_view(), name="user_organization_detail"),
 
 

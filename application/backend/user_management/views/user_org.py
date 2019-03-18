@@ -8,7 +8,7 @@ from rest_framework import status
 
 
 from user_management.models.management_model import UserOrganization, Organization
-from user_management.serializers.user_serializer import UserOrgSerializer, OrganizationSerializer
+from user_management.serializers.user_serializer import UserOrgSerializer
 
 
 # class to implement user organization
@@ -16,31 +16,25 @@ from user_management.serializers.user_serializer import UserOrgSerializer, Organ
 
 class UserOrgsList(APIView):
     def get(self, request):
-        users_org = UserOrganization.objects.all()
-        # define a serializer for userOrg
 
-        serializer = UserOrgSerializer(users_org, many=True)
+        # get all user_id
+        user_ids = list(set(UserOrganization.objects.values_list('user_id', flat=True)))
+        # get user_id and roles of the user
+        user_orgs = UserOrganization.objects.values('user_id', 'organization_id')
+        # getting all role_id and role_names
+        orgs = Organization.objects.values_list('organization_id', 'organization_name')
+
+        orgs_dict = {}
+        for org in range(len(orgs)):
+            orgs_dict.__setitem__(orgs[org][0], orgs[org][1])
+
         res = []
-        user_id = []
-
-        #record users presents in the table
-        for i in range(len(serializer.data)):
-
-            if serializer.data[i]['user_id'] not in user_id:
-
-                user_id.append(serializer.data[i]['user_id'])
-
-        #creataing JSON object which will collectively contains the organization for users
-        for i in range(len(user_id)):
-            org_arr = []
-            for j in range(len(serializer.data)):
-                if serializer.data[j]['user_id'] == user_id[i]:
-                    org_name = Organization.objects.get(organization_id=serializer.data[j]['organization_id'])
-                    org_serializer = OrganizationSerializer(org_name)
-                    org_name = org_serializer.data['organization_name']
-                    org_arr.append({"org_id": serializer.data[j]['organization_id'], "organization_name": org_name})
-            res.append({"user_id": user_id[i], "organizations": org_arr})
-
+        for i in range(len(user_ids)):
+            org_id = []
+            for user_org in user_orgs:
+                if user_ids[i] == user_org['user_id']:
+                    org_id.append({"organization_id": user_org['organization_id'], "organization_name": orgs_dict[user_org['organization_id']]})
+            res.append({"organization_id": user_ids[i], "organizations": org_id})
         return Response(res)
 
 
@@ -56,19 +50,21 @@ class UserOrgDetails(APIView):
             raise Http404
 
     def get(self, request, pk, format=None):
-        user_org = self.get_object(pk)
-        serializer = UserOrgSerializer(user_org, many=True)
 
-        res = []
-        org_arr = []
+        user_orgs = self.get_object(pk)
+        serializer = UserOrgSerializer(user_orgs, many=True)
 
-        for j in range(len(serializer.data)):
-            org_name = Organization.objects.get(organization_id=serializer.data[j]['organization_id'])
-            org_serializer = OrganizationSerializer(org_name)
-            org_name = org_serializer.data['organization_name']
-            org_arr.append({"organization_id": serializer.data[j]['organization_id'], "organization_name": org_name})
+        orgs = Organization.objects.values_list('organization_id', 'organization_name')
 
-        res.append({"user_id": pk, "organizations": org_arr})
+        orgs_dict = {}
+        for org in range(len(orgs)):
+            orgs_dict.__setitem__(orgs[org][0], orgs[org][1])
+
+        user_orgs = serializer.data
+        organizations = []
+        for user_org in user_orgs:
+            organizations.append({"organization_id": user_org['organization_id'], "organization_name": orgs_dict[user_org['organization_id']]})
+        res = {"user_id": pk, "organizations": organizations}
 
         return Response(res)
 

@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+
+from django.http import Http404
+from django.contrib.auth.models import User
+
+from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
-from django.http import Http404
-from rest_framework.response import Response
-
 # import models and serializers
 
-
-from django.contrib.auth.models import User
 from user_management.serializers.user_serializer import UserSerializer
-
 # create a userlist class to list all users or create a new one if now present
 
 
@@ -19,7 +18,6 @@ class UsersList(APIView):
         List all users, or create a new user
     """
     # HTTP GET method to get all the user from database
-
     def get(self, request, format=None):
         users = User.objects.all()  # get all the users from User object
         # define a serializer for user

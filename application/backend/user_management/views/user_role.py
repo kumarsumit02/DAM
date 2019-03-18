@@ -1,5 +1,7 @@
 from __future__ import unicode_literals
+
 from django.http import Http404
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -15,30 +17,28 @@ from user_management.serializers.user_serializer import UserRoleSerializer, Role
 class UserRolesList(APIView):
 
     def get(self, request):
-        usersRole = UserRole.objects.all()
-        # define a serializer for userRole
-        serializer = UserRoleSerializer(usersRole, many=True)
+        #user_role = UserRole.objects.all()
+        # # define a serializer for userRole
+        #serializer = UserRoleSerializer(user_role, many=True)
+
+        #get all user_id
+        user_ids = list(set(UserRole.objects.values_list('user_id', flat=True)))
+        #get user_id and roles of the user
+        user_roles = UserRole.objects.values('user_id', 'role_id')
+        #getting all role_id and role_names
+        roles = Role.objects.values_list('role_id', 'role_name')
+
+        roles_dict = {}
+        for role in range(len(roles)):
+            roles_dict.__setitem__(roles[role][0], roles[role][1])
 
         res = []
-        user_id = []
-
-        #record all users id present in users table into user_id
-        for i in range(len(serializer.data)):
-
-            if serializer.data[i]['user_id'] not in user_id:
-
-                user_id.append(serializer.data[i]['user_id'])
-
-        for i in range(len(user_id)):
-            role_arr = []
-            for j in range(len(serializer.data)):
-                if serializer.data[j]['user_id'] == user_id[i]:
-                    role_name = Role.objects.get(role_id=serializer.data[j]['role_id'])
-                    role_serializer = RoleSerializer(role_name)
-                    role_name = role_serializer.data['role_name']
-                    role_arr.append({"role_id":serializer.data[j]['role_id'], "role_name":role_name})
-            res.append({"user_id": user_id[i], "roles": role_arr})
-
+        for i in range(len(user_ids)):
+            role_id = []
+            for user_role in user_roles:
+                if user_ids[i] == user_role['user_id']:
+                    role_id.append({"role_id":user_role['role_id'], "role_name":roles_dict[user_role['role_id']]})
+            res.append({"user_id": user_ids[i], "roles":role_id})
         return Response(res)
 
 
@@ -54,16 +54,33 @@ class UserRoleDetails(APIView):
             raise Http404
 
     def get(self, request, pk, format=None):
-        user_role = self.get_object(pk)
-        serializer = UserRoleSerializer(user_role, many=True)
-        res = []
-        role_arr = []
-        for j in range(len(serializer.data)):
-            role_name = Role.objects.get(role_id=serializer.data[j]['role_id'])
-            role_serializer = RoleSerializer(role_name)
-            role_name = role_serializer.data['role_name']
-            role_arr.append({"role_id": serializer.data[j]['role_id'], "role_name": role_name})
-        res.append({"user_id": pk, "roles": role_arr})
+        # user_role = self.get_object(pk)
+        # serializer = UserRoleSerializer(user_role, many=True)
+        # res = []
+        # role_arr = []
+        # for j in range(len(serializer.data)):
+        #     role_name = Role.objects.get(role_id=serializer.data[j]['role_id'])
+        #     role_serializer = RoleSerializer(role_name)
+        #     role_name = role_serializer.data['role_name']
+        #     role_arr.append({"role_id": serializer.data[j]['role_id'], "role_name": role_name})
+        # res.append({"user_id": pk, "roles": role_arr})
+        # return Response(res)
+
+        user_roles = self.get_object(pk)
+        serializer = UserRoleSerializer(user_roles, many=True)
+
+        roles = Role.objects.values_list('role_id', 'role_name')
+
+        roles_dict = {}
+        for role in range(len(roles)):
+            roles_dict.__setitem__(roles[role][0], roles[role][1])
+
+        user_roles = serializer.data
+        roles = []
+        for user_role in user_roles:
+            roles.append({"role_id":user_role['role_id'], "role_name":roles_dict[user_role['role_id']]})
+        res = {"user_id":pk,"roles":roles}    
+
         return Response(res)
 
     def post(self, request, format=None):
