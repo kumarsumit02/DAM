@@ -24,8 +24,8 @@ services:
       - db
       - fe-app
     volumes:
-      - ./application/Backend-entry:/application
-    env_file: ./application/Backend-entry/backend/dams_api/.env
+      - ./application/:/application
+    env_file: ./application/backend/dams_api/.env
     ports:
       - "8000:8000"
 
@@ -33,7 +33,7 @@ services:
     build: .
     entrypoint: /application/react-entrypoint.sh
     volumes:
-      - ./application/Frontend-entry:/application
+      - ./application/:/application
     ports:
       - "3000:3000"
 
