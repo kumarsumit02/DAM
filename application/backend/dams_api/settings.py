@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/1.11/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
-
 import os
 import environ
 
@@ -43,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'user_management',
     'django_saml2_auth',
+    'assetmanagement',
 ]
 
 MIDDLEWARE = [
@@ -121,8 +121,6 @@ DATABASES = {
 }
 
 
-
-# Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
