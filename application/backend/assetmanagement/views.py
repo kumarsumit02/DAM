@@ -15,12 +15,14 @@ from assetmanagement.serializers import UpdateCreateAssetSerializer
 
 
 def get_metadata(asset_name):
+    # store the uploaded file into new folder
     from tika import parser
     return parser.from_file('/application/backend/AssetManagement/Temp/' + asset_name)
 # store type of asset and get its id
 
 
 def get_asset_type_id(asset_type):
+    # Get the asset type id using this method
     try:
         read_instance = CreateAssetType.objects.get(asset_type=asset_type)
         asset_type_id = RetrieveCreateAssetTypeSerializer(read_instance)
@@ -33,10 +35,10 @@ def get_asset_type_id(asset_type):
             return new_asset_type_id.data['asset_type']
         else:
             return new_asset_type_id.errors
-# store aditional metadata
 
 
 def metadata(key, value, asset_id):
+    # store aditional metadata
     data_to_store = {}
     data_to_store["metadata_key"] = key
     data_to_store["metadata_value"] = value
@@ -48,10 +50,10 @@ def metadata(key, value, asset_id):
         return asset_serializer.data
     else:
         return asset_serializer.error
-# update asset information
 
 
 def update_asset_table(asset_id, activate_on, expire_on, asset_name):
+    # update asset information
     data_to_update = {}
     data_to_update["activate_on"] = activate_on
     data_to_update["expire_on"] = expire_on
@@ -68,10 +70,10 @@ def update_asset_table(asset_id, activate_on, expire_on, asset_name):
             return None
     except CreateAsset.DoesNotExist:
         return None
-# update asset tags
 
 
 def create_tag(tag_name):
+    # create new tag and update asset tags
     try:
         read_instance = CreateTags.objects.get(tag_name=tag_name)
         tag_id = RetrieveCreateTagsSerializer(read_instance)
@@ -83,10 +85,10 @@ def create_tag(tag_name):
             return new_id.data['id']
         else:
             return new_id.errors
-# add value to Asset_tag table
 
 
 def create_asset_tag(asset_id, tag_id):
+    # add value to Asset_tag table
     data_to_store = {}
     data_to_store["asset_id"] = asset_id
     data_to_store["tag_id"] = tag_id
@@ -96,11 +98,10 @@ def create_asset_tag(asset_id, tag_id):
         return serializer.data
     else:
         return serializer.errors
-# Uploading Assets
 
 
 class UploadAsset(APIView):
-
+    # Uploading Assets by user
     def get(self, request, format=None):
         asset_id = self.request.query_params.get('id', None)
         if asset_id:
@@ -114,13 +115,12 @@ class UploadAsset(APIView):
                 return Response("Id does not exists")
 
         else:
-            # return Response("Ok NO")
             instance = CreateAsset.objects.all()
             serializer = RetrieveCreateAssetSerializer(instance, many=True)
             return Response(serializer.data)
 
     def post(self, request, format=None):
-        """cxfg"""
+        # when user uploads new asset
         if "file" and "folder_id" in request.data:
             asset = request.data['file']
             folder_id = request.data['folder_id']
@@ -190,6 +190,7 @@ class UploadAsset(APIView):
             return Response("Does not contain required parameter")
 
     def put(self, request, format=None):
+        # To update asset and its attributes
         if "id" and "activates_on" and "expire_on" and "name" and "tags" in request.data:
             asset_id = request.data['id']
             activate_on = request.data['activates_on']
@@ -212,6 +213,7 @@ class UploadAsset(APIView):
             return Response("Does not contain required parameter")
 
     def delete(self, request, format=None):
+        # To delete perticular asset
         if "id" in request.data:
             asset_id = request.data['id']
             try:
@@ -226,6 +228,7 @@ class UploadAsset(APIView):
 
 class Comments(APIView):
     def get(self, request, format=None):
+        # To get comment based on asset Id
         response_comment = retrieve_comment(request)
         modified_comment = []
         for child in response_comment:
@@ -246,9 +249,11 @@ class Comments(APIView):
         return Response(modified_comment)
 
     def post(self, request, format=None):
+        # To store comments and reply to those comments
         response_comment = store_comment(request)
         return Response(response_comment)
 
     def delete(self, request, format=None):
+        # To delete some comment based on asset Id
         response_comment = delete_comment(request)
         return Response(response_comment)
