@@ -1,6 +1,5 @@
 from tests import createAsset, createFolders, deleteFolders
-from utils import Elastic
-
+from core.utils import Elastic
 obj1 = createAsset({
     "folder_id": "F01",
     "id": "A01",
@@ -76,12 +75,12 @@ delete_obj_query = deleteFolders({
 elastic_obj = Elastic()
 ####################################
 # insert data to es
-# elastic_obj.index_data(obj1)
-# elastic_obj.index_data(obj2)
-# elastic_obj.index_data(obj3)
-# elastic_obj.index_data(obj4)
-# elastic_obj.index_data(fobj1)
-# elastic_obj.index_data(fobj2)
+elastic_obj.index_data(obj1)
+elastic_obj.index_data(obj2)
+elastic_obj.index_data(obj3)
+elastic_obj.index_data(obj4)
+elastic_obj.index_data(fobj1)
+elastic_obj.index_data(fobj2)
 ###################################
 # delete from es
-elastic_obj.delete_by_query(delete_obj_query)
+# elastic_obj.delete_by_query(delete_obj_query)
