@@ -7,4 +7,3 @@ six==1.12.0
 elasticsearch
 django_saml2_auth
 tika
-ipdb
