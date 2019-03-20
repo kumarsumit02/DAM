@@ -17,7 +17,6 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django_saml2_auth.views import welcome
 
-
 urlpatterns = [
 
     url(r'^admin/', admin.site.urls),

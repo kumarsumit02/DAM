@@ -11,13 +11,13 @@ class FolderApi(APIView):
     def get(self, request):
         # This API will return the JSON object containing the folder structure
 
-        id = request.query_params.get('id')
+        key = request.query_params.get('id')
 
         # store the root folders
         root = []
-        if id is None:
+        if key is None:
             # add the empty child field to every folder
-            folder_list = initialize()
+            folder_list = initialize(key)
 
             # create the hierarchical structure of folders
             folder_list = update_child(folder_list)
@@ -27,7 +27,7 @@ class FolderApi(APIView):
                 if instance['parent'] is None:
                     root.append(instance)
         else:
-            folder_list = get_folder_by_id(id)
+            folder_list = get_folder_by_id(key)
             root = folder_list
 
         # return json object of root folders
@@ -48,9 +48,9 @@ class FolderApi(APIView):
             return Response(ser.data)
 
     def delete(self, request):
-        id = request.query_params.get('id')
+        key = request.query_params.get('id')
 
-        inst = Folders.objects.get(id=id)
+        inst = Folders.objects.get(id=key)
         inst.delete()
         # serializer = readserial(inst)
         return Response(str(id) + "Deleted")
