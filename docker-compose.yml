@@ -20,6 +20,7 @@ services:
   app:
     build: .
     entrypoint: /application/django-entrypoint.sh
+    #command: tail -f /dev/null
     depends_on:
       - db
       - fe-app
@@ -28,7 +29,7 @@ services:
     env_file: ./application/backend/dams_api/.env
     ports:
       - "8000:8000"
-
+    
   fe-app:
     build: .
     entrypoint: /application/react-entrypoint.sh

@@ -11,7 +11,9 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends gnupg2 curl
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt-get update
+RUN mkdir -p /usr/share/man/man1
 RUN apt-get install -y --no-install-recommends build-essential \
+        openjdk-8-jdk \
         apt-transport-https \
         ca-certificates \
         gnupg \
@@ -63,4 +65,3 @@ ADD ./application/backend/requirements.txt $APP_HOME/requirements.txt
 RUN pip install -r $APP_HOME/requirements.txt
 RUN rm -rf requirements.txt
 ADD . $APP_HOME
-
