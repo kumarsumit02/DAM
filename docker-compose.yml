@@ -15,7 +15,7 @@ services:
       - psql-data:/var/lib/postgresql/data
       - .:/shared
     ports:
-      - 5432:5432
+      - 5433:5432
 
   app:
     build: .

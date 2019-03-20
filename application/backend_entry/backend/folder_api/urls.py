@@ -13,26 +13,10 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url, include
+from django.conf.urls import url
 from django.contrib import admin
-from django_saml2_auth.views import welcome
-
+from folder_api import views
 urlpatterns = [
-
     url(r'^admin/', admin.site.urls),
-
-    url('', include('folder_api.urls')),
-
-    # include saml2_auth app authentication requiered for SSO authentication login urls
-    url(r'^saml2_auth/', include('django_saml2_auth.urls'), name='django_saml2_auth'),
-
-    # home url with welcome message
-    url(r'^home/', welcome, name='home'),
-
-    # user_management application urls included
-    url('user_management/', include('user_management.urls', namespace='user_management')),
-
-    url('asset_management/', include('assetmanagement.urls'))
-
-
+    url(r'^folders/', views.FolderApi.as_view(), name='folders'),
 ]
