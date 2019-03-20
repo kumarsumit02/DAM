@@ -20,21 +20,23 @@ services:
   app:
     build: .
     entrypoint: /application/django-entrypoint.sh
-    #command: tail -f /dev/null
+    # command: tail -f /dev/null
     depends_on:
       - db
+      - elasticsearch
       - fe-app
     volumes:
-      - ./application/:/application
-    env_file: ./application/backend/dams_api/.env
+      - ./application/backend_entry:/application/
+
+    env_file: ./application/backend_entry/backend/dams_api/.env
     ports:
       - "8000:8000"
-    
+
   fe-app:
     build: .
     entrypoint: /application/react-entrypoint.sh
     volumes:
-      - ./application/:/application
+      - ./application/frontend_entry:/application/
     ports:
       - "3000:3000"
 
@@ -52,5 +54,12 @@ services:
     mem_limit: 1g
     volumes:
       - esdata1:/usr/share/elasticsearch/data
+      # - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     ports:
       - 9200:9200
+  kibana:
+    image: docker.elastic.co/kibana/kibana:6.6.0
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200
+    ports:
+      - 5601:5601
