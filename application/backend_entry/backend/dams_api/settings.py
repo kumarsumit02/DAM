@@ -28,8 +28,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY", default="key")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DJANGO_DEBUG", default="True")
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [env("ALLOWED_HOSTS")]
 # Application definition
 
 INSTALLED_APPS = [
