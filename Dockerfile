@@ -61,7 +61,7 @@ RUN mkdir -p $APP_HOME
 #COPY /docker-entrypoint.sh $APP_HOME
 WORKDIR $APP_HOME
 
-ADD ./application/backend/requirements.txt $APP_HOME/requirements.txt
+ADD ./application/backend_entry/backend/requirements.txt $APP_HOME/requirements.txt
 RUN pip install -r $APP_HOME/requirements.txt
 RUN rm -rf requirements.txt
 ADD . $APP_HOME
