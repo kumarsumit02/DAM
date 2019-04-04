@@ -1,0 +1,33 @@
+.topbar { 
+  margin-bottom: 50px;
+  height:100px;
+  background-color: #f8f9fb;
+}
+
+.loginicon{
+ margin-top: 20px;
+ margin-left: 55px;
+ 
+}
+
+.alchemy-logo {
+  width: 154px;
+  height: 33px;
+  margin-left:30px;
+  margin-top:16px;
+  
+}
+
+.search{
+  width: 524px;
+  height: 54px;
+  margin-top: 20px;
+  border-radius: 26px;
+  border: solid 1px #f0f0f0;
+  background-color: #ffffff;
+}
+.text{
+    margin-top: 15px;
+    font-size: 17px;
+    color: #0a1f44;
+}
