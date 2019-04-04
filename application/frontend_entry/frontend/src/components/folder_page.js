@@ -16,7 +16,7 @@ render(){
                  <SideBar />  
               </div>  
               <div className="col-md-10">
-                 <FoldersComponents {...this.props}/>
+                 <FoldersComponents {...this.props}/>                 
 
               </div>          
             </div>    
