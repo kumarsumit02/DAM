@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {SideBar} from "/application/frontend/src/components/sidebar.js";
-import {TopBar} from "/application/frontend/src/components/topbar.js";
+import {SideBar} from "/application/frontend/src/components/organisms/sidebar.js";
+import {TopBar} from "/application/frontend/src/components/organisms/topbar.js";
 
 
 export class Homepage extends Component{
@@ -13,8 +13,6 @@ export class Homepage extends Component{
                  <SideBar />  
               </div>         
             </div>           
-			  )
-		
+			  )	
 	     }
-
 }

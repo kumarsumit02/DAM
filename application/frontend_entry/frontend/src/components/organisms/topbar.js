@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import alchemylogo from "/application/frontend/src/alchemylogo.png";
+import alchemylogo from "/application/frontend/src/images/alchemylogo.png";
 import "/application/frontend/src/css/topbar.css";
 import {Link} from "react-router-dom";  
 

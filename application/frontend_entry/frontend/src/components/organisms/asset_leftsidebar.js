@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import "/application/frontend/src/css/assetLeftSideBar.css";
-import {PreviewSideBar} from "/application/frontend/src/components/preview_sidebar"
-import {AssetUtility} from '/application/frontend/src/components/asset_utility';
+import {PreviewSideBar} from "/application/frontend/src/components/organisms/preview_sidebar"
+import {AssetUtility} from '/application/frontend/src/components/organisms/asset_utility';
 
 export class AssetLeftSideBar extends Component {
   render() {

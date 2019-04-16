@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import {TopBar} from "/application/frontend/src/components/topbar.js";
-import {AssetLeftSideBar} from "/application/frontend/src/components/asset_leftsidebar"
-import {AssetRightSideBar} from "/application/frontend/src/components/asset_rightsidebar"
+import {TopBar} from "/application/frontend/src/components/organisms/topbar.js";
+import {AssetLeftSideBar} from "/application/frontend/src/components/organisms/asset_leftsidebar"
+import {AssetRightSideBar} from "/application/frontend/src/components/organisms/asset_rightsidebar"
 
 export class AssetDetails extends Component {
 

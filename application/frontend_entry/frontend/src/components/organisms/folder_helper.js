@@ -1,7 +1,7 @@
 import React,{Component} from "react";
 import "/application/frontend/src/css/folderview.css";
-import foldericon from "/application/frontend/src/foldericon.png";
-import {Asset} from "/application/frontend/src/components/asset_helper"
+import foldericon from "/application/frontend/src/images/foldericon.png";
+import {Asset} from "/application/frontend/src/components/organisms/asset_helper"
 
 export class FoldersComponents extends Component {
 

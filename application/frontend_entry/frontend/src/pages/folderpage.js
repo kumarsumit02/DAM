@@ -1,8 +1,8 @@
 import React,{Component} from "react";
 import "/application/frontend/src/css/folderview.css";
-import {FoldersComponents} from "/application/frontend/src/components/folder_helper.js";
-import {SideBar} from "/application/frontend/src/components/sidebar.js";
-import {TopBar} from "/application/frontend/src/components/topbar.js";
+import {FoldersComponents} from "/application/frontend/src/components/organisms/folder_helper.js";
+import {SideBar} from "/application/frontend/src/components/organisms/sidebar.js";
+import {TopBar} from "/application/frontend/src/components/organisms/topbar.js";
 
 
 export class FolderPage extends Component {
