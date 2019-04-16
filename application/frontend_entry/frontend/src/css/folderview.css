@@ -1,3 +1,9 @@
+.deleteiconrow{
+  background-color: #f8f9fb;
+  border: none;
+  padding:10px;
+  margin-left: 10px;
+}
 .center{
   position: absolute;
   left: 300px;
@@ -24,6 +30,7 @@ img{
 .format{
 	margin-top:20px;
 	margin-left:60px;
+	margin-right:100px; 
 }
 .row-top{
 	padding: 10px;

@@ -22,7 +22,7 @@ render(){
                     <i className="far fa-folder fa-2x"></i> 
                 </div>
                 <div className="col-md-9">
-                    <Link to="/folders" className="sidebartext"> Folders </Link>
+                    <a href="/folders" className="sidebartext"> Folders </a>
                 </div>
             </div>
 

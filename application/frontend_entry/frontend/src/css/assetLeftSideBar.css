@@ -1,0 +1,58 @@
+.container-fluid{
+    padding:20px;
+}
+
+.asset_box{
+   border:1px solid #BDBDBF;
+   position: absolute;
+   left: 80px;
+   top: 10px;
+   width: 541px;
+   height: 362px;
+   border: solid 1px #979797;
+   background-color: #ffffff;
+ }
+
+.assetpos{
+ position: absolute;
+ top: 130px;
+ left: 220px;
+}
+
+.expand{
+ position: absolute;
+ bottom: 10px;
+ right: 10px;
+}
+ 
+.ver1{
+   margin-left: 50px;
+ }
+
+.dam-icon{
+ padding: 8px;
+}
+.edit-dam-icon{
+  color:#aaa;
+}
+
+.ver{
+ display: block;
+} 
+
+.edit{
+ margin-top: 270px;
+ margin-left: 20px;
+}
+
+
+
+.field{
+ color: #0A1F44;
+ padding: 40px;
+}
+
+
+
+
+

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import {TopBar} from './topbar'
-import {SideBar} from './sidebar'
+import {SideBar} from "/application/frontend/src/components/sidebar.js";
+import {TopBar} from "/application/frontend/src/components/topbar.js";
 
 
 export class Homepage extends Component{
@@ -15,6 +15,6 @@ export class Homepage extends Component{
             </div>           
 			  )
 		
-	        }
+	     }
 
 }

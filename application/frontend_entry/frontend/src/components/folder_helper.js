@@ -1,6 +1,7 @@
 import React,{Component} from "react";
-import foldericon from "/application/frontend/src/foldericon.png";
 import "/application/frontend/src/css/folderview.css";
+import foldericon from "/application/frontend/src/foldericon.png";
+import {Asset} from "/application/frontend/src/components/asset_helper"
 
 export class FoldersComponents extends Component {
 
@@ -12,11 +13,17 @@ export class FoldersComponents extends Component {
       result: [],
       parent: "",
       hover_id: "",
-      test: props.match.params.id
-    } 
+      test: props.match.params.id,
+      checked: false,
+      selected_all: false,
+      folder_to_be_deleted: [],
+      asset_to_be_deleted: [],
+      refresh:""
+    }
+ 
   }
 
-  componentDidMount(){
+  componentWillMount(){
     if (this.state.test == null) {
      this.showfolders();
     } else {
@@ -53,7 +60,8 @@ export class FoldersComponents extends Component {
   }
 
   clickedHere(id){
-  let storeURL = (`http://localhost:8000/folders/?id=${id}`)
+    
+   let storeURL = (`http://localhost:8000/folders/?id=${id}`)
 
    if(this.props.history.location.pathname == '/folders') {
    this.props.history.push(`${this.props.history.location.pathname}/${id}`);
@@ -62,9 +70,10 @@ export class FoldersComponents extends Component {
     this.props.history.location.pathname ="/folders";
     this.props.history.push(`${this.props.history.location.pathname}/${id}`);
    }
-    console.log("test1",this.props.history.location)
+  
+    // console.log("test1",this.props.history.location)
     fetch(storeURL).then(response => response.json()).then(response => {
-    console.log(response);
+    
     this.setState(
       {
         result:response[0].child[0],
@@ -74,8 +83,8 @@ export class FoldersComponents extends Component {
     }); 
    }
 
-   delete(id,parent){
-
+   delete(e,id,parent){
+         e.preventDefault();
          let storeURL = (`http://localhost:8000/folders/?id=${id}`)
 
          if (parent == null){
@@ -84,15 +93,49 @@ export class FoldersComponents extends Component {
          else{
              fetch(storeURL,{method:"delete"}).then(res =>this.clickedHere(parent));     
            }     
-
+   
     }
 
-    edit(id,parent){
+    deletemultiple(folders,assets){
+
+      let folder_params=  'id='+ folders[0];
+      let asset_params= 'id='+ assets[0]; 
+
+      folders.map((item,index) => (
+        folder_params = folder_params + '&id='+item
+       ))
+      assets.map((item,index)=> (
+        asset_params = asset_params + '&id=' + item
+        ))
+      let storeURL = "http://localhost:8000/folders/?"+ folder_params
+      let assetURL = "http://localhost:8000/asset_management/asset/?"+ asset_params
+     
+     if (this.state.parent == ""){
+           fetch(storeURL,{method:"delete"}).then(res => this.showfolders());  
+           fetch(assetURL,{method:"delete"}).then(()=> this.forceUpdate())   
+       }
+     else{
+         // fetch(storeURL,{method:"delete"}).then(this.clickedHere(this.state.parent))
+         fetch(assetURL,{method:"delete"}).then(res => this.child.showassets())
+
+       }
+       this.setState(
+      {
+        folder_to_be_deleted: [],
+        asset_to_be_deleted:[]
+      });
+      
+    }
+
+    edit(e,id,parent){
+      e.preventDefault();
       let storeURL = ("http://localhost:8000/folders/")
       let newfoldername = prompt("Enter new folder name")
+
       let json = {
                       'name':newfoldername,
-                      'id':id
+                      'id':id,
+                      'parent':parent
                   }
         if (parent==null)
         {
@@ -162,44 +205,109 @@ export class FoldersComponents extends Component {
             );
       }
 
+      clickedOnCheckBox = param => event => {
+        
+        if(event.target.checked) {
+          let deleting_id = this.state.folder_to_be_deleted;
+          deleting_id.push(event.target.id)
+          this.setState({
+            folder_to_be_deleted: deleting_id,
+        })
+
+        }
+        else {
+          let filteredItems = this.state.folder_to_be_deleted.filter(item => !event.target.id.includes(item))
+          this.setState({
+            folder_to_be_deleted: filteredItems,  
+           })
+        }
+       
+      };
+
+      checkedAllCheckBoxes = params => event => {
+        
+        if(event.target.checked) { 
+          let deleting_id =[];
+          this.state.result.map((item,index) => (
+            deleting_id.push(item.id)
+          ));
+          this.setState({
+           folder_to_be_deleted: deleting_id,
+           selected_all: true,
+        })
+
+        }
+        else {
+          let deleting_id =[];
+          this.setState({
+            folder_to_be_deleted: deleting_id,
+            selected_all: false,
+        })
+         
+        }
+
+      }
+      assetProps(assets){
+            this.setState({
+            asset_to_be_deleted: assets,
+        })
+
+        
+      }
+     
 render(){
   
     return(
-          <div className="format ">
+          <div className="format">
+              
                <div className="row row-top">
                  <div className="row">
-                    <div className="col-md-offset-10 ">    
-                        <button className="buttoncolor"><i className="fas fa-reply fa-2x" onClick={() => this.back(this.state.id)}></i></button> 
+                   <div className="col-md-2">
+                    <input onClick={this.checkedAllCheckBoxes()} type="checkbox"></input>
+                     {this.state.folder_to_be_deleted.length > 1 || this.state.asset_to_be_deleted.length > 1? <i className="far fa-trash-alt fa-lg deleteiconrow" onClick={() => this.deletemultiple(this.state.folder_to_be_deleted,this.state.asset_to_be_deleted)}></i> : null }
+                   </div>
+                    <div className="col-md-10">    
+                        <button className="buttoncolor col-md-offset-8"><i className="fas fa-reply fa-2x" onClick={() => this.back(this.state.id)}></i></button> 
                         <button className="buttoncolor"> <i className="fas fa-folder-plus fa-2x" onClick={() => this.addfolders(this.state.id,this.state.parent)}></i> </button>                     
                     </div>  
                  </div>
                </div>  
-       
+        
                {this.state.result.map((data, idx) => {
                   return (
                      <div key={data.id}  className ="inner-format"> 
                    
-                         <div className ="row rowhighlight" onMouseEnter={() =>this.showhover(data.id)} onMouseLeave={() =>this.showhoverout()} onClick={() => this.clickedHere(data.id)}>  
+                         <div className ="row rowhighlight" onMouseEnter={() =>this.showhover(data.id)} onMouseLeave={() =>this.showhoverout()}>
                            
-                            <div className="col-md-2">                                         
+                           
+                            {this.state.selected_all ? 
+                                            <input className="checkbox" checked = {true} type="checkbox"></input> 
+                                            : 
+                                            <input className="checkbox" id={data.id} onChange={this.clickedOnCheckBox(idx)} type="checkbox"></input>
+                            }
+                            
+                            <div className="col-md-2" onClick={()=>this.clickedHere(data.id)}>                                         
                                 <img src={foldericon} height="50" width="50" align="left"/>
                             </div>
                       
-                             <div className="col-md-6 text">
+                             <div className="col-md-6 text" onClick={()=>this.clickedHere(data.id)}>
                                 {data.name}
                              </div>
                                                      
                              {this.state.hover_id === data.id  ? 
                                 <span>
-                                    <button><i className="far fa-trash-alt fa-lg padding10" onClick={() => this.delete(data.id,data.parent)}></i></button>&nbsp;&nbsp;
-                                    <button><i className="far fa-edit fa-lg padding10" onClick={() => this.edit(data.id,data.parent)}></i> </button>
+                                    <button><i className="far fa-trash-alt fa-lg padding10" onClick={(e) => this.delete(e,data.id,data.parent)}></i></button>&nbsp;&nbsp;
+                                    <button><i className="far fa-edit fa-lg padding10" onClick={(e) => this.edit(e,data.id,data.parent)}></i> </button>
                                 </span> : <span> </span>
-                              }
+                              }                             
                           </div> 
-                      </div>
+                                        
+
+                         </div>
                          );           
                  })}
-
+ 
+        <Asset key1={this.state.parent} key2={this.state.selected_all} asset={(assets)=>this.assetProps(assets)} onRef= {ref => (this.child = ref)}/>
            
           </div>          
        
