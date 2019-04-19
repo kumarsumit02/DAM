@@ -1,0 +1,26 @@
+.shape {
+  width: 49.5px;
+  height: 49.5px;
+  border: solid 0.2px #000000;
+  background-color: #0f376e;
+}
+.module-title{
+	font-size: 20px;
+}
+.alchemy-logo {
+  width: 154px;
+  height: 33px;
+}
+.dam-btn{
+    margin-top: 5px;
+    padding-left:10px;
+    padding-right:10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+.dam-btn:hover{
+
+    border:1px solid #bdbdbf;
+    border-radius: 2px;
+}

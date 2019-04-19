@@ -1,0 +1,119 @@
+.uploading-folder{
+  font-size: 17px;
+  color: #0f376e;
+}
+.modal-body{
+    text-align: center;
+    height: 130px;
+    top:50px;
+ } 
+
+ .modal-content{
+   background-color: #f8f9fb;
+   top: 70px;
+   width: 500px;
+   height: 370px;
+   
+ }
+.upload-icon{
+  margin-left: 42%;
+  margin-top: 50px;
+}
+ .btn-dam {
+ background-color: #0f376e;
+ border: none;
+ border-radius: 32px;
+ color: white;
+ padding: 16px 32px;
+ text-align: center;
+ font-size: 16px;
+ margin: 4px 2px;
+ opacity: 0.6;
+ transition: 0.3s;
+}
+
+.btn-dam:hover {opacity: 1;
+}
+
+.modalText{
+    color: #0f376e;
+}
+
+#rcorners3 {
+    border-radius: 25px;
+    border: 2px solid #F8F9FB;
+    padding: 20px; 
+    width: 900px;
+    margin-left: 100px;
+    margin-top: 10px;
+    background-color: #F8F9FB;
+    text-align: center;
+  }
+
+  #upload-btn {
+    margin-top: 0px;
+
+  }
+
+  #custom-file-input {
+      margin-left: 10px;
+      width: 30%;
+      display:inline-block;
+    
+  }
+  #image-preview {
+    margin-top: 40px;
+    padding: 0px
+  }
+  .btn-primary {
+    height: 36px;
+    width: 100px;
+    margin-top: 30px;
+    margin-left: 20px;
+    font-family: Raleway-SemiBold;
+    font-size: 13px;
+    color: #FFF;
+    background: #696969;
+    letter-spacing: 1px;
+    line-height: 15px;
+    border: 2px solid #696969;
+    border-radius: 40px;
+   
+    
+  }
+  .btn-primary:focus {
+    background: #696969;
+    border: 2px solid #696969;
+    color: #FFF;
+  }
+  .btn-primary:hover {
+    color: #FFF;
+    background: #696969;
+    border: 2px solid #696969;
+  }
+
+  #Progressbar {
+    display: block;
+  }
+
+  .CircularProgressbar {
+  
+    margin-top: 0%;
+    width: 55%;
+    height:55%;
+  }
+  .CircularProgressbar.inverted .CircularProgressbar-background {
+    fill: #3e98c7;
+  }
+  
+  .CircularProgressbar.inverted .CircularProgressbar-text {
+    fill: #fff;
+  }
+  
+  .CircularProgressbar.inverted .CircularProgressbar-path {
+    stroke: #fff;
+  }
+  
+  .CircularProgressbar.inverted .CircularProgressbar-trail {
+    stroke: transparent;
+  }

@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import {BrowserRouter,Route,Switch} from 'react-router-dom'
-import {Errorpage} from "/application/frontend/src/pages/errorpage.js"
-import {Homepage} from "/application/frontend/src/pages/homepage.js"
-import {FolderPage} from "/application/frontend/src/pages/folderpage.js"
-import {AssetDetails} from "/application/frontend/src/pages/asset_details.js"
+import {Errorpage} from "/application/frontend/src/dams/pages/errorpage.js"
+import {Homepage} from "/application/frontend/src/dams/pages/homepage.js"
+import {FolderPage} from "/application/frontend/src/dams/pages/folderpage.js"
+import {AssetDetails} from "/application/frontend/src/dams/pages/assetDetails.js"
 
 class App extends Component{
 

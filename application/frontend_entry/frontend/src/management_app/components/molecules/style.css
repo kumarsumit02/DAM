@@ -1,0 +1,32 @@
+.Settings {
+  position: absolute;
+  bottom: 30px;
+}
+.template-top-area{
+	padding-top: 15px;
+	padding-left: 15px;
+	padding-bottom: 15px;
+	margin-bottom: 10px;
+	background-color: #f5f5f5;
+	border-radius: 5px;
+}
+.pane{
+	padding: 20px;
+	height: 470px;
+	border:1px solid  #bdbdbf;
+	border-radius: 6px;
+}
+.title{
+	padding-bottom: 8px;
+}
+
+.not-selected{
+	color: #e8e6e6;
+	padding-top:150px;
+	text-align: center;
+}
+
+.not-slected-text{
+	color: #e8e6e6;
+	text-align:center;
+}

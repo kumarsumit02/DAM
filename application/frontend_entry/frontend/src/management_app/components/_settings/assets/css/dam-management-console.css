@@ -1,0 +1,37 @@
+
+#sidebar {
+    /* don't forget to add all the previously mentioned styles here too */
+    background: #f8f9fb;
+    height: 80vh;
+    width: 100%;
+}
+
+.target-content{
+    padding-top: 5px;
+    height: 80vh;
+    background-color: #ffff;
+}
+
+#sidebar li{
+    border-radius: 2px;
+    border: solid 0.2px #979797;
+    font-size: 15px;
+    font-weight: 400;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #616161;
+}
+
+
+#sidebar ul li a {
+    padding: 25px;
+    font-size: 1.1em;
+    display: block;
+    color: #0a1f44;
+}
+#sidebar ul li a:hover {
+    background: #ffff;
+}
+

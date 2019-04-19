@@ -1,0 +1,20 @@
+.Rectangle {
+  height: 99px;
+  background-color: #f8f9fb;
+}
+
+header {
+  height: 99px;
+}
+
+.topbar-container{
+	padding: 30px;
+}
+
+.pane{
+	padding: 20px;
+	margin-left: 15px;
+	height: 470px;
+	border:1px solid #bdbdbf;
+	border-radius:6px;
+}

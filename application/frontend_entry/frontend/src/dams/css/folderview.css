@@ -1,0 +1,76 @@
+.top-checkbox{
+	 vertical-align: middle;
+}
+
+.deleteiconrow{
+  background-color: #f8f9fb;
+  border: none;
+  padding:10px;
+  margin-left: 10px;
+}
+.center{
+  position: absolute;
+  left: 300px;
+  top: 155px;
+}
+.table-content{
+	width: 700px;	
+}
+
+img{
+	display: inline;
+}
+
+.name{
+	align:center;
+}
+.rowhighlight{
+	padding: 10px;
+	border:1px solid #dfdfdf;
+}
+.rowhighlight:hover{
+	background-color: #f8f9fb;
+}
+.format{
+	margin-top:20px;
+	margin-left:60px;
+	margin-right:100px; 
+}
+.row-top{
+	padding: 10px;
+	background-color: #f8f9fb;
+	margin-bottom: 5px;
+	height: 50px;
+}
+.padding10{
+	padding: 10px;
+
+}
+.top-icon{
+	margin-left: 680px;
+}
+.icon-pad{
+	margin-left: 29px;
+}
+.text{
+	  margin-top: 15px;
+	  font-size: 17px;
+	  color: #0a1f44;
+	  height:50px;
+}
+.addfoldericon{
+	margin-left: 700px;
+}
+.backicon{
+	margin-left: 600px;
+}
+.scroll-container{
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+.buttoncolor{
+	background-color: #f8f9fb;
+	padding-left: 20px;
+	border: none;
+	outline: none;
+}
