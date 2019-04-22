@@ -11,8 +11,11 @@ def initialize(key):
             instance.update({'child': []})
             folder_list.append(instance)
     else:  # Returns the folder of the given id
-        folder_obj = Folders.objects.get(id=key)
-        folder_list.append(folder_obj)
+        try:
+            folder_obj = Folders.objects.get(id=key)
+            folder_list.append(folder_obj)
+        except Folders.DoesNotExist:
+            folder_list = []
 
     return folder_list
 
@@ -33,14 +36,17 @@ def get_folder_by_id(key):
 
     # Gets the folder and its children
     folder_list = initialize(key)
-    for folder in folder_list:
-        children = folder.folders_set.all()
-        children_serial = FolderSerializer(children, many=True)
-        folder_serial = FolderSerializer(folder)
-        children_json = children_serial.data
-        folder_json = folder_serial.data
-        folder_list.remove(folder)
-        folder_json.update({'child': []})
-        folder_json['child'].append(children_json)
-        folder_list.append(folder_json)
+    if len(folder_list) == 0:
+        folder_list.append("id is invalid")
+    else:
+        for folder in folder_list:
+            children = folder.folders_set.all()
+            children_serial = FolderSerializer(children, many=True)
+            folder_serial = FolderSerializer(folder)
+            children_json = children_serial.data
+            folder_json = folder_serial.data
+            folder_list.remove(folder)
+            folder_json.update({'child': []})
+            folder_json['child'].append(children_json)
+            folder_list.append(folder_json)
     return folder_list

@@ -4,9 +4,6 @@ import './style.css'
 
 export class TemplateDesc extends Component{
 	
-	constructor(props){
-		super(props)
-	}
 
 	componentWillReceiveProps = async(nextProps) => {
 		this.props = nextProps

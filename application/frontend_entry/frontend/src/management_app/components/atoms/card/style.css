@@ -22,7 +22,7 @@
     margin-top: 10px;
     border:1px solid #bdbdbf;
     border-radius: 6px;
-    height: 250px;
+    height: 215px;
     overflow-y: scroll;
 }
 
@@ -70,4 +70,7 @@
 }
 .show{
     display: inline;
+}
+.no-record{
+    text-align: center;
 }

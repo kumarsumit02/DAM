@@ -4,14 +4,14 @@ from assetmanagement.models import Comments
 
 
 def store_comment(request):
-    if "comment" and "asset_id" and "parent_id" in request.data:
+    if "comment" and "asset" and "parent" in request.data:
         data_to_store = {}
-        data_to_store["asset_id"] = request.data["asset_id"]
+        data_to_store["asset"] = request.data["asset"]
         data_to_store["comment"] = request.data["comment"]
-        if request.data["parent_id"] == "NULL":
+        if request.data["parent"] == "NULL":
             pass
         else:
-            data_to_store["parent_id"] = request.data["parent_id"]
+            data_to_store["parent"] = request.data["parent"]
 
         serializer = StoreCommentsSerializer(data=data_to_store)
         if serializer.is_valid():
@@ -24,10 +24,10 @@ def store_comment(request):
 
 
 def retrieve_comment(request):
-    if "asset_id" in request.query_params:
-        asset_id = request.query_params['asset_id']
+    if "asset" in request.query_params:
+        asset = request.query_params['asset']
         try:
-            instance = Comments.objects.filter(asset_id_id=asset_id)
+            instance = Comments.objects.filter(asset=asset)
             serializer = RetrieveCommentSerializer(instance, many=True)
             return serializer.data
         except Comments.DoesNotExist:

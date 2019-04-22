@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import "/application/frontend/src/dams/css/assetRightSideBar.css";
+import {urls} from '/application/frontend/src/dams/routes/apiRoutes'
 
 export class AssetRightSideBar extends Component {
   
@@ -9,14 +10,29 @@ export class AssetRightSideBar extends Component {
       user_data: [],
       tags:[]
     };
+    this.url=urls
  }
   componentDidMount(){
-    let fetchURL = "http://localhost:8000/asset_management/asset/?id="+ this.props.match.params.id
+    let fetchURL = this.url.get_asset + this.props.match.params.id
          fetch(fetchURL).then(rsp => rsp.json()).then(results => {
           this.setState({
                 user_data: results[0],
             })        
         });
+    let fetchURLTAG = "http://localhost:8000/asset_management/tags/?id="+ this.props.match.params.id
+        fetch(fetchURLTAG).then(rsp => rsp.json()).then(results => {
+
+          console.log("Result",results);
+          let tagArray=[];
+            results.map( (item,index) => (
+                tagArray.push({'id': item.id.toString(),'text': item.tag_name})
+            ))
+            this.setState({
+              tags: tagArray,
+            })  
+        
+       
+        });    
     }
 
   back(){
@@ -48,7 +64,14 @@ export class AssetRightSideBar extends Component {
                       <div class="box">
                          <div class="row col-md-12">
                             <div class="col-md-4 tagtab">
-                              <div id="tags"></div>
+                              {    
+                                   this.state.tags.map( (item,index) => (
+                                    <div id="tags">
+                                      {item.text}
+                                    </div>
+                                  
+                                    ))     
+                            }
                             </div>
                          </div>
                       </div>      

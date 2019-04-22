@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 import os
 import environ
+from elasticsearch import Elasticsearch
 
 env = environ.Env()
 environ.Env.read_env()
@@ -45,11 +46,14 @@ INSTALLED_APPS = [
     'django_saml2_auth',
     'assetmanagement',
     'core',
+    'elasticsearch_api',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -58,7 +62,7 @@ MIDDLEWARE = [
 ]
 
 
-#saml2 configuration setting for Okta sso authentication
+# saml2 configuration setting for Okta sso authentication
 
 SAML2_AUTH = {
     # Metadata is required, choose either remote url or local file path
@@ -66,9 +70,9 @@ SAML2_AUTH = {
 
     # Optional settings below
     'DEFAULT_NEXT_URL': '/home',
-      # Custom target redirect URL after the user get logged in. Default to /admin if not set. This setting will be overwritten if you have parameter ?next= specificed in the login URL.
+    # Custom target redirect URL after the user get logged in. Default to /admin if not set. This setting will be overwritten if you have parameter ?next= specificed in the login URL.
     'CREATE_USER': 'TRUE',
-     # Create a new Django user when a new user logs in. Defaults to True.
+    # Create a new Django user when a new user logs in. Defaults to True.
     'NEW_USER_PROFILE': {
         'USER_GROUPS': [],  # The default group name when a new user logs in
         'ACTIVE_STATUS': True,  # The default active status for new users
@@ -159,4 +163,58 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR,'static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ORIGIN_WHITELIST = env("CORS_ORIGIN_WHITELIST", default='http://localhost:3000')
+
+CORS_ORIGIN_REGEX_WHITELIST = env("CORS_ORIGIN_REGEX_WHITELIST", default='*')
+
+MEDIA_ROOT = env("MEDIA_ROOT", default='/application/backend/assetmanagement/')
+MEDIA_URL = env("MEDIA_URL", default='/media/')
+
+ELASTICSEARCH_CLIENT = Elasticsearch([{'host': env(
+    "ELASTICSEARCH_HOST", default='elasticsearch'), 'port': env("ELASTICSEARCH_PORT", default=9200)}])
+ELASTICSEARCH_SETTINGS = env("ES_SETTINGS", default={
+    "index.max_ngram_diff": 18,
+    "index.number_of_replicas": 1,
+    "index.number_of_shards": 6,
+    "analysis": {
+        "filter": {
+            "nGram_filter": {
+                "type": "nGram",
+                "min_gram": 2,
+                "max_gram": 20,
+                "token_chars": [
+                    "letter",
+                    "digit",
+                    "punctuation",
+                    "symbol"
+                ]
+            }
+        },
+        "analyzer": {
+            "nGram_analyzer": {
+                "type": "custom",
+                "tokenizer": "whitespace",
+                "filter": [
+                    "lowercase",
+                    "asciifolding",
+                    "nGram_filter"
+                ]
+            },
+            "whitespace_analyzer": {
+                "type": "custom",
+                "tokenizer": "whitespace",
+                "filter": [
+                    "lowercase",
+                    "asciifolding"
+                ]
+            }
+        }
+    }
+}
+)

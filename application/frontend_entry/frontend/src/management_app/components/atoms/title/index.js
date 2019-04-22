@@ -4,10 +4,6 @@ import './style.css'
 
 export class TemplateTitle extends Component{
 	
-	constructor(props){
-		super(props)
-	}
-
 	render(){
 		return(
 			<h3>{this.props.name}</h3>
@@ -16,10 +12,6 @@ export class TemplateTitle extends Component{
 } 
 
 export class EditableTitlebox extends Component{
-
-	constructor(props){
-		super(props)
-	}
 
 	componentWillReceiveProps = async(nextProps) => {
 		this.props = nextProps

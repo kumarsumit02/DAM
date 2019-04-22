@@ -62,7 +62,7 @@ export class FilterFunc extends Component {
             this.setState({audioState:0})
           }
           else if(this.state.audioState == 0){
-            file_type.push('application/mp4')
+            file_type.push('application/mp3')
             this.setState({audioState:1})
           }
         break;
@@ -72,7 +72,7 @@ export class FilterFunc extends Component {
             this.setState({docState:0})
           }
           else if(this.state.docState == 0){
-            file_type.push('application/mp4')
+            file_type.push('application/pdf')
             this.setState({docState:1})
           }
         break;
@@ -82,7 +82,7 @@ export class FilterFunc extends Component {
             this.setState({htmlState:0})
           }
           else if(this.state.htmlState == 0){
-            file_type.push('application/mp4')
+            file_type.push('text/html')
             this.setState({htmlState:1})
           }
         break;

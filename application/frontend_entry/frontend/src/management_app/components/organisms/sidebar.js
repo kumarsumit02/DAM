@@ -10,6 +10,8 @@ export const RouteComp = () => (
   <div className="col-sm-9">
         <div className="target-content">
         {routes.map((route, index) => (
+          // Render more <Route>s with the same paths as
+          // above, but different components this time.
           <Route
             key={index}
             path={route.path}

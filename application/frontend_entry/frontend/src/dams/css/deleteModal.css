@@ -27,8 +27,13 @@
    background-color: #f8f9fb;
    top: 200px;
    width: 500px;
-   height: 250px;
-   
+   height: 350px;
+ }
+ .delete-modal-content{
+   background-color: #f8f9fb;
+   margin-top: 50%;
+   width: 500px;
+   height: 200px;
  }
  .modal-share{
    background-color: #f8f9fb;

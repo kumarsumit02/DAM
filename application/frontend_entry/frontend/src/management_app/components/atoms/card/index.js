@@ -1,9 +1,6 @@
 import React, {Component} from 'react'
 import './style.css'
-
-import {PaneButton} from '../button/'
-
-
+ 
 
 export class SearchBox extends Component{
 
@@ -20,8 +17,11 @@ export class SearchBox extends Component{
 
 	componentWillReceiveProps = async(nextProps) => {
 		this.props = nextProps
-		this.setState({data:this.props.data, all_data: this.props.data, feature_name:this.props.feature_name, target_name:this.props.target_name})
-		
+		this.setState({data:this.props.data,
+			all_data: this.props.data,
+			feature_name:this.props.feature_name,
+			target_name:this.props.target_name
+		})
 	}
 
 
@@ -39,6 +39,7 @@ export class SearchBox extends Component{
 		const {feature_name} = await this.state;
 		const {target_name} = await this.state;
 		var search_value = ''
+		
 		var filtered_data = await this.state.all_data.filter(function(el){
 			
 			if(feature_name !== undefined){
@@ -62,6 +63,7 @@ export class SearchBox extends Component{
 					return search_value.indexOf(search_query.toLowerCase())!== -1;
 				}
 			}
+			return []
 		});
 		//setting the filtered data to the state
 		
@@ -93,9 +95,7 @@ export class SearchBox extends Component{
 	} 
 
 	render(){
-		console.log(this.state.clearButton_appearnace)
 		return(
-
 			<div className="col-md-12 search-box" >
 				<div>
 					<span className="input-group-text">
@@ -105,7 +105,6 @@ export class SearchBox extends Component{
 					</span>
 			  	</div>
 			</div>
-
 		)
 	}
 }
@@ -122,38 +121,32 @@ export class SearchTarget extends Component{
 
 	componentWillReceiveProps = async(nextProps) => {
 		this.props = nextProps
-
 	}
 
 	on_select = async(event) =>{
-		
 		await this.setState({
 			selected_id:event.target.id,
 			selected_name:event.target.innerHTML
 		})
-		
 		this.props.callbackFromParent(this.state.selected_id, this.state.selected_name)
 
 	}
 
-	on_select_all = async() =>{
-		// console.log('on_select_all')
-		this.props.get_multi_select()
-	}
+
 
 	render(){
 
 		let {data, feature_name} = this.props;
-		//console.log(this.props.data)
-		//console.log(feature_name === 'orgs'?this.state.selected_id===data[0].org_id?'bx-record capital-case highlight':'bx-record capital-case highlight':'bx-record capital-case')
 		let sel_id, ele_id, condition_res, class_default, class_highlighted;
 		return(
 				<div className="col-md-12 content-box">
 					{
 						this.props.input_box?<input className ="bx-record-child" type="text" ref={input => input && input.focus()} id="new_record" placeholder="new record" />:null
 					}
-					{
+					{	
+						
 						data !== null?
+						data.length !== 0 ?
 						data.map((ele)=>(
 							
 							sel_id = this.state.selected_id,
@@ -171,8 +164,8 @@ export class SearchTarget extends Component{
 							</div>	
 					
 							)
-						)	
-						:<div  className='bx-record capital-case highlight' >No record found</div>	
+						): !this.props.input_box?<div  className='bx-record capital-case no-record' >No record found</div>:null	
+						:null
 					}
 					
 				</div>			
@@ -187,7 +180,8 @@ export class CheckSearchTarget extends Component{
 		this.state = {
 			selected_collection:[],
 			checked_box:false,
-			assigned_user_ids:[]
+			assigned_user_ids:[],
+			filter_target_data_ids:[]
 		}
 		this.assign = []
 		this.remove = []
@@ -196,10 +190,17 @@ export class CheckSearchTarget extends Component{
 	
 	componentWillReceiveProps = async(nextProps) => {
 		this.props = nextProps
-		this.setState({
-			selected_collection:nextProps.assigned_user_ids,
-			assigned_user_ids:nextProps.assigned_user_ids
+		let filter_target_data_ids = [];
+		nextProps.target_data.map((ele)=>{
+			filter_target_data_ids.push(this.props.target_name === 'orgs'?ele.org_id:ele.id)
 		})
+		
+		this.setState({
+			filter_target_data_ids:filter_target_data_ids,
+			selected_collection:nextProps.assigned_ids,
+			assigned_user_ids:nextProps.assigned_ids
+		})
+
 		this.assign = []
 		this.remove = []
 	}
@@ -208,59 +209,135 @@ export class CheckSearchTarget extends Component{
 
 		if((!this.state.selected_collection.includes(id)) && !this.state.checked_box){
 			
-			if(!this.props.assigned_user_ids.includes(id))
+			if(!this.props.assigned_ids.includes(id))
 				this.assign.push(id)
 			if(this.remove.includes(id))
-					this.remove.splice(this.remove.indexOf(id),1)
+				this.remove.splice(this.remove.indexOf(id),1)
 
 			await this.setState({
 				selected_collection:[...this.state.selected_collection, id]
 			})
 		}
 		else{
-			if(this.props.assigned_user_ids.includes(id))
+			if(this.props.assigned_ids.includes(id))
 				this.remove.push(id)
 
 			if(this.assign.includes(id))
-					this.assign.splice(this.assign.indexOf(id),1)
+				this.assign.splice(this.assign.indexOf(id),1)
 
 			let a = this.state.selected_collection;
 			a.splice(a.indexOf(id), 1)
 			this.setState({selected_collection:a})
 		}
 	
-		// console.log(this.assign, this.remove)
-		//console.log(this.state.selected_collection)
 		this.props.callbackFromParent(this.assign, this.remove)
-		
 	}
 
 	render(){
 
 		const {target_data, target_name} = this.props;
-		
 		return(
-				<div className="col-md-12 content-box-checked scroll-container">
-					
-				{
-					target_data !== null && this.state.selected_collection !== undefined?
-						target_data.map((ele, i)=>(
-
-							<div className="row" key={ele.id}>
-								<div className="checkbox-record">
-									<div className="col-md-2">
-										<input id={target_name === 'orgs'?ele.org_id:ele.id}  type="checkbox" onChange={()=>this.select_user(target_name === 'orgs'?ele.org_id:ele.id)} checked={this.state.selected_collection.includes(target_name === 'orgs'?ele.org_id:ele.id)?true:false}/> 
-									</div>
-									<div className="col-md-6">
-										<span className={this.state.selected_collection.includes(target_name === 'orgs'?ele.org_id:ele.id)?'green':null}>{target_name === 'users'?ele.email:ele.name} </span>
-									</div>
+				<div className="col-md-12 content-box-checked scroll-container">	
+				{	
+					!target_data.length?
+					<div className="row" >
+						<div className="checkbox-record">
+						{
+							<div>
+								<div className="col-md-12 no-record">
+									<span> No record found </span>
 								</div>
 							</div>
-							
+						}	
+						</div>
+					</div>
+					:
+					this.props.filter_select === -1?
+					target_data !== null && this.state.selected_collection !== undefined?
+						target_data.map((ele, i)=>(
+							<div className="row" key={ele.id}>
+								<div className="checkbox-record">
+									{	
+										!this.props.selected_all?
+										<div>
+										<div className="col-md-2">
+											<input id={target_name === 'orgs'?ele.org_id:ele.id}  type="checkbox" onChange={()=>this.select_user(target_name === 'orgs'?ele.org_id:ele.id)} checked={this.state.selected_collection.includes(target_name === 'orgs'?ele.org_id:ele.id)?true:false}/> 
+										</div>
+										<div className="col-md-6">
+											<span className={this.state.selected_collection.includes(target_name === 'orgs'?ele.org_id:ele.id)?'green':null}>{target_name === 'users'?ele.email:ele.name} </span>
+										</div>
+										</div>:
+										<div>
+										<div className="col-md-2">
+											<input id={target_name === 'orgs'?ele.org_id:ele.id}  type="checkbox" onChange={()=>this.select_user(target_name === 'orgs'?ele.org_id:ele.id)} checked={true}/> 
+										</div>
+										<div className="col-md-6">
+											<span className='green'>{target_name === 'users'?ele.email:ele.name} </span>
+										</div>
+										</div>
+									}	
+								</div>
+							</div>
+						)):null
 
-							)
-							
-					):null
+					:this.props.filter_select === 1?
+					target_data !== null && this.state.selected_collection !== undefined?
+						target_data.map((ele, i)=>(
+							this.state.assigned_user_ids.includes(target_name === 'orgs'?ele.org_id:ele.id)?
+							<div className="row" key={ele.id}>
+								<div className="checkbox-record">
+									{	
+										!this.props.selected_all?
+										<div>
+										<div className="col-md-2">
+											<input id={target_name === 'orgs'?ele.org_id:ele.id}  type="checkbox" onChange={()=>this.select_user(target_name === 'orgs'?ele.org_id:ele.id)} checked={this.state.selected_collection.includes(target_name === 'orgs'?ele.org_id:ele.id)?true:false}/> 
+										</div>
+										<div className="col-md-6">
+											<span className={this.state.selected_collection.includes(target_name === 'orgs'?ele.org_id:ele.id)?'green':null}>{target_name === 'users'?ele.email:ele.name} </span>
+										</div>
+										</div>:
+										<div>
+										<div className="col-md-2">
+											<input id={target_name === 'orgs'?ele.org_id:ele.id}  type="checkbox" onChange={()=>this.select_user(target_name === 'orgs'?ele.org_id:ele.id)} checked={true}/> 
+										</div>
+										<div className="col-md-6">
+											<span className='green'>{target_name === 'users'?ele.email:ele.name} </span>
+										</div>
+										</div>
+									}	
+								</div>
+							</div>:null
+						)):null
+					:
+					target_data !== null && this.state.selected_collection !== undefined?
+
+						target_data.map((ele, i)=>(
+							!this.state.assigned_user_ids.includes(target_name === 'orgs'?ele.org_id:ele.id)?
+							<div className="row" key={ele.id}>
+								<div className="checkbox-record">
+									{	
+										!this.props.selected_all?
+										<div>
+										<div className="col-md-2">
+											<input id={target_name === 'orgs'?ele.org_id:ele.id}  type="checkbox" onChange={()=>this.select_user(target_name === 'orgs'?ele.org_id:ele.id)} checked={this.state.selected_collection.includes(target_name === 'orgs'?ele.org_id:ele.id)?true:false}/> 
+										</div>
+										<div className="col-md-6">
+											<span className={this.state.selected_collection.includes(target_name === 'orgs'?ele.org_id:ele.id)?'green':null}>{target_name === 'users'?ele.email:ele.name} </span>
+										</div>
+										</div>:
+										<div>
+										<div className="col-md-2">
+											<input id={target_name === 'orgs'?ele.org_id:ele.id}  type="checkbox" onChange={()=>this.select_user(target_name === 'orgs'?ele.org_id:ele.id)} checked={true}/> 
+										</div>
+										<div className="col-md-6">
+											<span className='green'>{target_name === 'users'?ele.email:ele.name} </span>
+										</div>
+										</div>
+									}	
+								</div>
+							</div>:null
+						)):null
+					
 				}	
 				
 				</div>	

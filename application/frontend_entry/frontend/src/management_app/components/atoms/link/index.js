@@ -5,10 +5,6 @@ import '../../_settings/assets/css/dam-management-console.css'
 
 export class LinkComponent extends Component{
 
-	constructor(props){
-		super(props)
-	}
-
 	render(){
 		return(
 			<li>

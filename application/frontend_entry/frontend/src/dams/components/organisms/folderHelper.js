@@ -1,7 +1,8 @@
 import React,{Component} from "react";
 import "/application/frontend/src/dams/css/folderview.css";
 import foldericon from "/application/frontend/src/dams/images/foldericon.png";
-import {Asset} from "/application/frontend/src/dams/components/organisms/assetHelper"
+import {Asset} from "/application/frontend/src/dams/components/organisms/assetHelper";
+import {urls} from '/application/frontend/src/dams/routes/apiRoutes';
 
 export class FoldersComponents extends Component {
 
@@ -20,8 +21,12 @@ export class FoldersComponents extends Component {
       asset_to_be_deleted: [],
       refresh:"",
       suggestions: [],
+      paginationFrom:0,
+      paginationTo:0,
+      page:0,
+      pages_to_display:0
     }
- 
+     this.url=urls
   }
 
  template = (data,idx) => {
@@ -82,7 +87,7 @@ export class FoldersComponents extends Component {
   }
 
   showfolders = () => {
-    let storeURL = ('http://localhost:8000/folders/');
+    let storeURL = this.url.get_folders
     fetch(storeURL).then(response => response.json()).then(response=> {
     this.setState(
       {
@@ -101,7 +106,7 @@ export class FoldersComponents extends Component {
    if(this.state.suggestions.folders){
     window.location.replace(`http://localhost:3000/folders/${id}`);
    } 
-   let storeURL = (`http://localhost:8000/folders/?id=${id}`)
+   let storeURL = this.url.get_folder +id
 
    if(this.props.history.location.pathname == '/folders') {
    this.props.history.push(`${this.props.history.location.pathname}/${id}`);
@@ -124,7 +129,7 @@ export class FoldersComponents extends Component {
 
    delete(e,id,parent){
          e.preventDefault();
-         let storeURL = (`http://localhost:8000/folders/?id=${id}`)
+         let storeURL =this.url.get_folder + id
 
          if (parent == null){
                fetch(storeURL,{method:"delete"}).then(res => this.showfolders()); 
@@ -151,8 +156,8 @@ export class FoldersComponents extends Component {
       //   asset_params = asset_params + '&id=' + item
       //   ))
 
-      let storeURL = "http://localhost:8000/folders/?"+ folder_params
-      let assetURL = "http://localhost:8000/asset_management/asset/?"+ asset_params
+      let storeURL = this.url.multi_folders + folder_params
+      let assetURL = this.url.multi_assets + asset_params
      
      if (this.state.parent == ""){
            fetch(storeURL,{method:"delete"}).then(res => this.showfolders());  
@@ -172,7 +177,7 @@ export class FoldersComponents extends Component {
 
     edit(e,id,parent){
       e.preventDefault();
-      let storeURL = ("http://localhost:8000/folders/")
+      let storeURL = this.url.get_folders
       let newfoldername = prompt("Enter new folder name")
 
       let json = {
@@ -202,7 +207,7 @@ export class FoldersComponents extends Component {
                         "name" : foldername,
                         "parent" : parent
                      }
-          let storeURL = ('http://localhost:8000/folders/')
+          let storeURL = this.url.get_folders
 
         
        
@@ -301,6 +306,7 @@ export class FoldersComponents extends Component {
 
         
       }
+      
      
   render(){
   
@@ -311,7 +317,7 @@ export class FoldersComponents extends Component {
                  <div className="row">
                    <div className="col-md-2">
                     <input onClick={this.checkedAllCheckBoxes()} type="checkbox" className="top-checkbox"></input>
-                     {this.state.folder_to_be_deleted.length > 1 || this.state.asset_to_be_deleted.length > 1 || (this.state.folder_to_be_deleted.length + this.state.asset_to_be_deleted.length > 1 ) ? 
+                     {this.state.folder_to_be_deleted.length > 1 || this.state.asset_to_be_deleted.length > 1 || (this.state.folder_to_be_deleted.length + this.state.asset_to_be_deleted.length > 1) || this.state.selected_all ? 
                          <i className="far fa-trash-alt fa-lg deleteiconrow" onClick={() => this.deletemultiple(this.state.folder_to_be_deleted,this.state.asset_to_be_deleted)}></i> 
                            : null }
                    </div>

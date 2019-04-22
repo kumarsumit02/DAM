@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Link} from "react-router-dom"; 
 import "/application/frontend/src/dams/css/folderview.css";
+import {urls} from '/application/frontend/src/dams/routes/apiRoutes'
 
 export class Asset extends Component {
 
@@ -16,6 +17,7 @@ export class Asset extends Component {
       asset_suggestions: [],
  
     };
+    this.url=urls
   }
   
   template = (data,idx) => {
@@ -31,7 +33,7 @@ export class Asset extends Component {
                }
              </div>                 
               <div className="col-md-2">                                         
-                  <img src={`http://localhost:8000/media/${data.thumbnail}`} height="75" width="105" align="left"/>
+                  <img src={ this.url.media + data.thumbnail} height="75" width="105" align="left"/>
               </div>
         
              <div className="col-md-6 text">
@@ -53,7 +55,7 @@ export class Asset extends Component {
      
   showassets(){
     
-       let fetchURL = "http://localhost:8000/asset_management/asset/?folder_id="+ this.state.folder_id
+       let fetchURL = this.url.get_asset_folder + this.state.folder_id
        fetch(fetchURL).then(rsp => rsp.json()).then(results => {
         this.setState({
               user_data: results,
@@ -77,7 +79,7 @@ export class Asset extends Component {
           }) 
      }
      if(this.state.folder_id!==nextProps.parent){
-        let fetchURL = "http://localhost:8000/asset_management/asset/?folder_id="+ nextProps.parent
+        let fetchURL = this.url.get_asset_folder + nextProps.parent
         fetch(fetchURL).then(rsp => rsp.json()).then(results => {
         this.setState({
               user_data: results,
@@ -87,7 +89,10 @@ export class Asset extends Component {
       });
     }
     if (nextProps.asset_data != undefined) {
-      this.setState({ asset_suggestions: nextProps.asset_data.assets })
+      this.setState({ asset_suggestions: nextProps.asset_data.assets})
+      if(nextProps.asset_data.assets != undefined){
+        this.setState({user_data: []})
+      }
     }  
   }
 
@@ -95,7 +100,7 @@ export class Asset extends Component {
    
    e.preventDefault();
 
-   let storeURL = ('http://localhost:8000/asset_management/asset/?id='+ id)
+   let storeURL = this.url.delete_asset + id
    fetch(storeURL,{ method: "delete"}).then(res => this.showassets()); 
 
   }

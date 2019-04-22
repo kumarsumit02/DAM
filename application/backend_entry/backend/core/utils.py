@@ -1,6 +1,7 @@
-from elasticsearch import Elasticsearch
+from django.conf import settings
 
-ES_CLIENT = Elasticsearch([{'host': 'elasticsearch', 'port': 9200}])
+ELASTICSEARCH_SETTINGS = settings.ELASTICSEARCH_SETTINGS
+ELASTICSEARCH_CLIENT = settings.ELASTICSEARCH_CLIENT
 
 
 class Elastic():
@@ -8,13 +9,13 @@ class Elastic():
     # Create_index - adds index to es
     def create_index(self, obj):
         index_name = obj.es_config['index_name']
-        ES_CLIENT.indices.create(
+        ELASTICSEARCH_CLIENT.indices.create(
             index=index_name,
             body={
-                "settings": obj.es_config['settings']
+                "settings": ELASTICSEARCH_SETTINGS
             }
         )
-        ES_CLIENT.indices.put_mapping(
+        ELASTICSEARCH_CLIENT.indices.put_mapping(
             doc_type=obj.es_config['type_name'],
             body=obj.es_config['mapping'],
             index=index_name
@@ -24,8 +25,8 @@ class Elastic():
     # delete_index - deletes an index
     def delete_index(self, obj):
         index_name = obj.es_config['index_name']
-        if ES_CLIENT.indices.exists(index=index_name):
-            ES_CLIENT.indices.delete(index=index_name)
+        if ELASTICSEARCH_CLIENT.indices.exists(index=index_name):
+            ELASTICSEARCH_CLIENT.indices.delete(index=index_name)
             return True, 'DELETED'
         else:
             return False, 'No Such Index'
@@ -34,10 +35,10 @@ class Elastic():
     def index_data(self, obj):
         index_name = obj.es_config['index_name']
         doc_type = obj.es_config['type_name']
-        if ES_CLIENT.indices.exists(index=index_name):
+        if ELASTICSEARCH_CLIENT.indices.exists(index=index_name):
             id = obj.params['id']
             body = obj.params
-            ES_CLIENT.index(
+            ELASTICSEARCH_CLIENT.index(
                 index=index_name,
                 doc_type=doc_type,
                 id=id,
@@ -47,11 +48,11 @@ class Elastic():
             self.create_index(obj)
             id = obj.params['id']
             body = obj.params
-            ES_CLIENT.index(
+            ELASTICSEARCH_CLIENT.index(
                 index=index_name,
                 doc_type=doc_type, id=id,
                 body=body)
-        return True, 'Added Data'
+        return True, 'Added Data succussfully'
 
     # update_data - updates data in elastic search
     def update_data(self, obj):
@@ -59,8 +60,8 @@ class Elastic():
         doc_type = obj.es_config['type_name']
         id = obj.params['id']
         body = obj.params
-        if ES_CLIENT.indices.exists(index=index_name):
-            ES_CLIENT.update(
+        if ELASTICSEARCH_CLIENT.indices.exists(index=index_name):
+            ELASTICSEARCH_CLIENT.update(
                 index=index_name,
                 doc_type=doc_type,
                 id=id,
@@ -77,8 +78,8 @@ class Elastic():
         index_name = obj.es_config['index_name']
         doc_type = obj.es_config['type_name']
         id = obj.params['id']
-        if ES_CLIENT.indices.exists(index=index_name):
-            ES_CLIENT.delete(
+        if ELASTICSEARCH_CLIENT.indices.exists(index=index_name):
+            ELASTICSEARCH_CLIENT.delete(
                 index=index_name,
                 doc_type=doc_type,
                 id=id)
@@ -93,7 +94,7 @@ class Elastic():
         index_name = obj.es_config['index_name']
         doc_type = obj.es_config['type_name']
         qid = obj.params['qid']
-        ES_CLIENT.delete_by_query(
+        ELASTICSEARCH_CLIENT.delete_by_query(
             index=index_name,
             doc_type=doc_type,
             body={
@@ -101,9 +102,9 @@ class Elastic():
 
     def primary_search(self, obj):
         index_name = obj.es_config['index_name']
-        doc_type = obj.es_config['type_name']
-        ES_CLIENT.delete_by_query(
+        result = ELASTICSEARCH_CLIENT.search(
             index=index_name,
-            doc_type=doc_type,
+            # filter_path=['hits.hits._id'],
             body=obj.query
         )
+        return result

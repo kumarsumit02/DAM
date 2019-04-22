@@ -5,6 +5,8 @@ volumes:
     driver: local
   psql-data:
     driver: local
+  site-packages:
+    driver: local
 
 services:
   db:
@@ -20,13 +22,14 @@ services:
   app:
     build: .
     entrypoint: /application/django-entrypoint.sh
-    # command: tail -f /dev/null
+    command: tail -f /dev/null
     depends_on:
       - db
       - elasticsearch
       - fe-app
     volumes:
       - ./application/backend_entry:/application/
+      - site-packages:/usr/local/lib/python3.7/site-packages
 
     env_file: ./application/backend_entry/backend/dams_api/.env
     ports:

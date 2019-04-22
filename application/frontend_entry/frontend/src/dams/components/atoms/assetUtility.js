@@ -66,7 +66,7 @@ export class AssetUtility extends Component {
                       <i className="far fa-trash-alt fa-2x dam-icon" data-toggle="modal" data-target="#myModal" title="Delete"></i>
                             <div class="modal fade" id="myModal">
                               <div class="modal-dialog">
-                                  <div class="modal-content">
+                                  <div class="delete-modal-content">
                                       <div class="modal-body">
                                           <p class="modalText">Are you sure you want to delete the asset?</p>
                     

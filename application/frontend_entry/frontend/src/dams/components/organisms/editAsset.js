@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { withRouter , Redirect} from 'react-router';
 import { WithContext as ReactTags } from 'react-tag-input';
 import "/application/frontend/src/dams/css/editAssetbar.css";
-import "/application/frontend/src/dams/css/inputtag.css"
+import "/application/frontend/src/dams/css/inputtag.css";
+import {urls} from '/application/frontend/src/dams/routes/apiRoutes'
 
 
 class EditAssetBar extends Component {
@@ -25,11 +26,12 @@ class EditAssetBar extends Component {
 
         ]
     };
+    this.url=urls
   }
 
   componentWillMount() {
     if(this.props.match.params) {
-      let fetchURL = "http://localhost:8000/asset_management/asset/?id="+this.props.match.params.id
+      let fetchURL = this.url.get_asset +this.props.match.params.id
       fetch(fetchURL).then(rsp => rsp.json()).then(results => {
         
           this.setState({
@@ -41,7 +43,7 @@ class EditAssetBar extends Component {
       
       });
 
-      let fetchURLTAG = "http://localhost:8000/asset_management/tags/?id="+this.props.match.params.id
+      let fetchURLTAG = this.url.get_tags +this.props.match.params.id
       fetch(fetchURLTAG).then(rsp => rsp.json()).then(results => {
         let tagArray=[];
           results.map( (item,index) => (
@@ -90,7 +92,7 @@ class EditAssetBar extends Component {
     formData.append('expire_on', this.state.expire_on );
     formData.append('name', this.state.name );
 
-    fetch('http://localhost:8000/asset_management/asset/', {
+    fetch(this.url.edit_asset, {
         method: 'PUT',
         body: formData
       }).then( (response) => { 
@@ -113,7 +115,7 @@ class EditAssetBar extends Component {
 
     let params = "tag="+this.state.tags[position].text;
    
-    let fetchURL = "http://localhost:8000/asset_management/tags/?"+params
+    let fetchURL = this.url.fetch_tags + params
     fetch(fetchURL,requestOptions).then(rsp => rsp.json()).then(results => {
         
      
@@ -131,7 +133,7 @@ class EditAssetBar extends Component {
     formData.append('id', this.state.id );
     formData.append('tag', tag["text"] );
 
-    fetch('http://localhost:8000/asset_management/tags/', {
+    fetch(this.url.post_tags, {
       method: 'POST',
       body: formData
     }).then( (response) => { 

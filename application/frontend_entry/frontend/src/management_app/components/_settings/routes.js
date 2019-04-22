@@ -8,7 +8,7 @@ import {Roles} from '../templates/roles'
 export const routes = [
   { path: '/',
     exact: true,
-    main: () => <h1>Dashboard</h1>
+    main: () => <Users />
   },
   { path: '/users',
     main: () => <Users />
@@ -18,9 +18,5 @@ export const routes = [
   },
   { path: '/organizations', 
     main: () => <Organization />
-  },
-  {
-    path: '/settings',
-    main: () => <h3>Settings</h3>
   }
 ]

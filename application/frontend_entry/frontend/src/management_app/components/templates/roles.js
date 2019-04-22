@@ -13,7 +13,7 @@ export class Roles extends Component{
 		this.state = {
 			data:[],
 			permissions:[],
-			assigned_user_ids:[]
+			assigned_permission_ids:[]
 		}
 		this.url = urls
 	}
@@ -26,37 +26,58 @@ export class Roles extends Component{
 
 	//getting all organizations data
 	get_roles = async() =>{
-		await fetch(this.url.get_roles)
-			.then(response => response.json())
-			.then(data => this.setState({
-				 						 data:data
-				 						}))
+
+		try{
+			await fetch(this.url.get_roles)
+				.then(response => response.json())
+				.then(data => this.setState({
+					 						 data:data
+					 						}))
+		}catch(e){
+
+		}
+
+
 			//console.log(this.state.data)
 	}
 
 	//getting all permissions from database
 	get_permissions = async() =>{
-		await fetch(this.url.get_permissions)
-			.then(response => response.json())
-			.then(data => this.setState({
-				 						 permissions:data
-				 						}))
+
+		try{
+			await fetch(this.url.get_permissions)
+				.then(response => response.json())
+				.then(data => this.setState({
+					 						 permissions:data
+					 						}))
+		}catch(e){
+
+		}
+
 	}
 
 
 	//adding a new role to the database
 	add_role = async(data) =>{
-		console.log("add_role");
 		var json_data = {
 		  	"name":data.toLowerCase()
 		  }
 		 
-		const organization = await fetch(this.url.add_role, {
+		const role = await fetch(this.url.add_role, {
 		   method: 'post',
 		   headers: new Headers({'Content-Type':'application/json'}),
 		   body: JSON.stringify(json_data)
-		}).then(res =>res.json())
-		this.get_roles()
+		})
+
+		if(role.status === 201){
+			//return the user 
+			this.get_roles()
+		}else{
+			//alert error message
+			alert('some error occurred! it may be due to the role with the same name is already exist')
+		}
+
+		
 	}
 
 	//delete a role from database
@@ -67,8 +88,8 @@ export class Roles extends Component{
 			headers: new Headers({'Content-Type':'application/json'}),
 		})
 		.then((responseData)=>{
-			if(responseData.status == 204){
-			  	console.log("Role deleted")
+			if(responseData.status === 204){
+			  	//console.log("Role deleted")
 			}
 		})
 		this.get_roles()
@@ -92,8 +113,10 @@ export class Roles extends Component{
 	save_changes = async(id, name, assign, remove) =>{
 
 		await this.update_role(id, name)
-		await this.add_role_permissions(id, assign)
-		await this.remove_role_permissions(id, remove)
+		if(assign.length !== undefined)
+			await this.add_role_permissions(id, assign)
+		if(remove.length !== undefined)
+			await this.remove_role_permissions(id, remove)
 		
 		await this.get_roles()
 		this.get_role_permissions(id)
@@ -115,7 +138,7 @@ export class Roles extends Component{
 			role_ids.push(ele.id)
 		})
 		
-		this.setState({assigned_user_ids:role_ids})
+		this.setState({assigned_permission_ids:role_ids})
 
 	}
 
@@ -147,10 +170,31 @@ export class Roles extends Component{
 	}
 
 	render(){
+
+		let props = {
+			data:this.state.data,
+			feature_name:'roles',
+			target_name:'permissions',
+			target_data:this.state.permissions,
+			add_func:this.add_role,
+			delete_func:this.delete_role, 
+			save_func:this.save_changes, 
+			assigned_ids:this.state.assigned_permission_ids,
+			get_data:this.get_role_permissions
+		}
+
+		let header = {
+			title:"Roles",
+			desc:"Manage Roles and their permissions",
+		}
+
+
 		return(
 			<div className="row">
-				<TemplateTitleDesc title="Roles"  desc="Manage Roles and their permissions"/>
-				<DefaultTemplate data = {this.state.data} feature_name = 'roles' target_name = 'permissions' target_data = {this.state.permissions} add_func={this.add_role} delete_func={this.delete_role} save_func={this.save_changes} assigned_user_ids={this.state.assigned_user_ids} get_data={this.get_role_permissions}/>
+			
+				<TemplateTitleDesc {...header}/>
+				<DefaultTemplate {...props} />
+		
 			</div>
 		)
 	}

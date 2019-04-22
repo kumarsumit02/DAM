@@ -1,0 +1,541 @@
+# final search results
+GET asset/assets/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "bool": {
+            "should": [
+              {
+                "match": {
+                  "name": {
+                    "query": "electric",
+                    "operator": "and",
+                    "boost": 0.5
+                  }
+                }
+              },
+              {
+                "match": {
+                  "metadata.tags": {
+                    "query": "banana",
+                    "operator": "or",
+                    "boost": 1
+                  }
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "filter": {
+        "bool": {
+          "must": [
+            {
+              "term": {
+                "metadata.status": "pending"
+              }
+            },
+            {
+              "term": {
+                "metadata.file_type": "image/jpeg"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+DELETE asset
+DELETE folder
+#-----------------------------------------------
+PUT asset
+{
+  "settings": {
+    "index.max_ngram_diff":18,
+    "index.number_of_replicas" : 1,
+    "index.number_of_shards": 6,
+    "analysis": {
+      "filter": {
+        "nGram_filter": {
+          "type": "nGram",
+            "min_gram": 2,
+            "max_gram": 20,
+            "token_chars": [
+              "letter",
+            "digit",
+            "punctuation",
+            "symbol"
+              ]
+        }
+      },
+      "analyzer": {
+        "nGram_analyzer": {
+          "type": "custom",
+          "tokenizer": "whitespace",
+          "filter": [
+            "lowercase",
+          "asciifolding",
+          "nGram_filter"
+            ]
+        },
+        "whitespace_analyzer": {
+          "type": "custom",
+          "tokenizer": "whitespace",
+          "filter": [
+            "lowercase",
+          "asciifolding"
+            ]
+        }
+      }
+    }
+  }
+}
+PUT folder
+"settings": {
+            "index.max_ngram_diff": 18,
+            "index.number_of_replicas": 1,
+            "index.number_of_shards": 6,
+            "analysis": {
+                "filter": {
+                    "nGram_filter": {
+                        "type": "nGram",
+                        "min_gram": 2,
+                        "max_gram": 20,
+                        "token_chars": [
+                            "letter",
+                            "digit",
+                            "punctuation",
+                            "symbol"
+                        ]
+                    }
+                },
+                "analyzer": {
+                    "nGram_analyzer": {
+                        "type": "custom",
+                        "tokenizer": "whitespace",
+                        "filter": [
+                            "lowercase",
+                            "asciifolding",
+                            "nGram_filter"
+                        ]
+                    },
+                    "whitespace_analyzer": {
+                        "type": "custom",
+                        "tokenizer": "whitespace",
+                        "filter": [
+                            "lowercase",
+                            "asciifolding"
+                        ]
+                    }
+                }
+            }
+        },
+#-----------------------------------------------
+#Assets:
+#Search on: name, tags, description,category
+#Filter on: file_type, status
+# Create document with properties
+#-----------------------------------------------
+PUT asset/_mapping/assets
+{
+  "properties": {
+    "folder_id":{
+      "type": "keyword"
+    },
+    "id":{
+      "type": "keyword"
+    },
+    "name": {
+      "type": "text",
+      "analyzer": "nGram_analyzer",
+      "search_analyzer": "whitespace_analyzer",
+       "boost":5
+    },
+    "organisation_id": {
+      "type": "keyword"
+    },
+    "metadata":{
+      "properties": {
+        
+      "file_type": {
+        "type": "keyword"
+      },
+      "status":{ 
+        "type": "keyword"
+      },
+      "tags":{ 
+        "type": "text",
+        "analyzer": "nGram_analyzer",
+        "search_analyzer": "whitespace_analyzer"
+      },
+      "description":{ 
+        "type": "text",
+        "analyzer": "whitespace_analyzer"
+      },
+      "category":{ 
+        "type": "text",
+        "analyzer": "nGram_analyzer",
+        "search_analyzer": "whitespace_analyzer"
+      }
+    }
+    }
+  }
+}
+#category is applicable globally over asset
+PUT folder/_mapping/folders
+{
+  "properties": {
+    "id":{
+      "type": "keyword"
+    },
+    "name": {
+      "type": "text",
+      "analyzer": "nGram_analyzer",
+      "search_analyzer": "whitespace_analyzer"
+    },
+    "organisation_id": {
+      "type": "keyword"
+    }
+  }
+}
+#----------------------------------------------
+# Asset Schema
+POST asset/assets/1
+{
+  "folder_id":"F01",
+  "id":"A01",
+  "name":"tyres",
+  "organisation_id":"O01",
+  "metadata":{
+    "file_type":"image",
+    "status":"Active",
+    "tags":"BMW ExteriorPart",
+    "description":"Michelin's pilot sport series tire",
+     "category":"OuterPart"
+    } 
+}
+POST asset/assets/2
+{
+  "folder_id":"F02",
+  "id":"A02",
+  "name":"TDI engines",
+  "organisation_id":"O01",
+  "metadata":{
+    "file_type":"image",
+    "status":"InActive",
+    "tags":"Audi Engine Part",
+    "description":"1.4 TFSI",
+     "category":"OutyerPart"
+    } 
+}
+POST asset/assets/3
+{
+  "folder_id":"F01",
+  "id":"A03",
+  "name":"tyres",
+  "organisation_id":"O01",
+  "metadata":{
+    "file_type":"video",
+    "status":"Active",
+    "tags":"BMW ExteriorPart",
+    "description":"Michelin's pilot sport series tire",
+     "category":"OuterPart"
+    } 
+}
+POST asset/assets/4
+{
+  "folder_id":"F02",
+  "id":"A04",
+  "name":"TDI engines",
+  "organisation_id":"O02",
+  "metadata":{
+    "file_type":"url",
+    "status":"Active",
+    "tags":"Audi Engine Part",
+    "description":"1.4 TFSI",
+     "category":"OuterPart"
+    } 
+}
+
+#----------------------------------------------
+# Folder Schema
+POST folder/folders/1
+{
+  "id":"F01",
+  "name":"BMW",
+  "organisation_id":"O01"
+}
+POST folder/folders/2
+{
+  "id":"F02",
+  "name":"Audi",
+  "organisation_id":"O02"
+}
+
+
+#----------------------------------------------
+#Search and Filter for folder and asset
+GET folder,asset/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "match": {
+            "name": {
+              "query": "ty",
+              "operator": "and",
+              "boost":10
+            }
+          }
+        },
+        {
+          "match": {
+            "metadata.tags": {
+              "query": "bm",
+              "operator": "and",
+              "boost":5
+            }
+          }
+        },
+        {
+          "match": {
+            "metadata.category": {
+              "query": "Ou",
+              "operator": "and",
+              "boost":7
+            }
+          }
+        },
+        {
+          "match": {
+            "metadata.description": {
+              "query": "Mi",
+              "operator": "and"
+            }
+          }
+        } 
+      ],
+      "filter": [
+        {
+          "term": {
+            "metadata.status": "Active"
+          }
+        },
+        {
+          "term": {
+            "organisation_id": "O01"
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+#______Filter_____
+
+#Status: Active,InActive filter
+GET asset/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "terms": {
+            "metadata.status":[ "InActive", "Active"]
+          }
+        }
+      ]
+    }
+  }
+}
+
+#File_type:image,video,url
+GET asset/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "terms": {
+            "metadata.file_type": [
+              "image",
+              "video",
+              "url"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
+       
+#_____Search_____
+
+GET folder,asset/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        {
+          "match": {
+            "name": {
+              "query": "ty",
+              "operator": "and",
+              "boost":10
+            }
+          }
+        },
+        {
+          "match": {
+            "metadata.tags": {
+              "query": "ty",
+              "operator": "and",
+              "boost":5
+            }
+          }
+        },
+        {
+          "match": {
+            "metadata.category": {
+              "query": "ty",
+              "operator": "and",
+              "boost":7
+            }
+          }
+        },
+        {
+          "match": {
+            "metadata.description": {
+              "query": "ty",
+              "operator": "and"
+            }
+          }
+        } 
+      ]
+    }
+  }
+}
+
+
+
+
+
+
+##----------------------------------------------
+#
+#
+#----------------------------------------------
+#Extra...
+#-----------------------------------------------
+# Filter and Multimatch (tags and category)
+GET asset/dams/_search
+{
+  "query": {
+    "bool": {
+      "must": [{
+        "multi_match": {
+          "query": "Au",
+          "fields": [
+            "metadata.tags",
+            "metadata.category"
+          ]
+        }
+      }], 
+      "filter": {
+        "term": {
+          "org_id": "O01"
+        }
+      }
+    }
+  }
+}
+
+#----------------------------------------------
+#Filter by String of folder_id
+GET asset/dams/_search
+{
+  "query": {
+    "query_string": {
+      "query": "A01 OR A02 OR A03",
+      "fields": ["folder_id"]
+    }
+  }
+}
+#----------------------------------------------
+
+#Partial search Multimatch for names tags description
+GET asset,folder/_search
+{
+  "query": {
+    "bool": {
+      "must": [{
+        "multi_match": {
+          "query": "BMW",
+          "fields": [
+           "name",
+           "metadata.tags",
+           "metadata.description",
+           "metadata.category"
+          ],
+          "operator" : "and"
+        }
+      }], 
+      "filter": {
+        "term": {
+          "org_id": "O01"
+        }
+      }
+    }
+  }
+}
+#----------------------------------------------
+# Partial search results for name
+GET asset/dams/_search
+{
+  "query":{
+    "bool":{
+      "filter": {
+        "bool" : {
+          "must" : [
+            {
+              "term": {
+                "name":"ti"
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+
+#-----------------------------------------------
+# Query String for name
+GET asset/dams/_search
+{
+  "query": {
+    "query_string": {
+      "query": "tire OR TDI engine",
+      "fields": ["asset_name"]
+    }
+  }
+}
+
+
+#----------------------------------------------
+#Filter by String of "organisation_id"
+GET asset/dams/_search
+{
+  "query": {
+    "query_string": {
+      "query": "O01 OR O02 OR O03",
+      "fields": ["organisation_id"]
+    }
+  }
+}

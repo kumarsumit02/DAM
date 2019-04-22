@@ -16,12 +16,15 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django_saml2_auth.views import welcome
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
 
     url(r'^admin/', admin.site.urls),
 
     url('', include('folder_api.urls')),
+    url('', include('elasticsearch_api.urls')),
 
     # include saml2_auth app authentication requiered for SSO authentication login urls
     url(r'^saml2_auth/', include('django_saml2_auth.urls'), name='django_saml2_auth'),
@@ -33,6 +36,4 @@ urlpatterns = [
     url('user_management/', include('user_management.urls', namespace='user_management')),
 
     url('asset_management/', include('assetmanagement.urls'))
-
-
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

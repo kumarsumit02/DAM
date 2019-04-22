@@ -10,9 +10,9 @@ export class TopBar extends Component{
 				<div className="Rectangle">
 					<div className="topbar-container">
 						<div className="row">
-							<div className="col-md-5">
+							<div className="col-md-10">
 								<div className="row">
-									<div className="col-md-4">
+									<div className="col-md-2	">
 										<Logo />
 									</div>
 									<div className="col-md-8">
@@ -20,7 +20,7 @@ export class TopBar extends Component{
 									</div>
 								</div>
 							</div>
-							<div className="col-md-2 col-md-offset-5">
+							<div className="col-md-2">
 								<ProfileIcon />
 							</div>
 						</div>

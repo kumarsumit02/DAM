@@ -20,7 +20,24 @@
     text-align: center;
 }
 .dam-btn:hover{
-
     border:1px solid #bdbdbf;
     border-radius: 2px;
 }
+
+.filter-dropdown{
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.filter-dropdown li{
+  padding-left: 25px;
+}
+.filter-dropdown li:hover{
+  background-color: #f5f5f5
+}
+.highlighted{
+  background-color: #f5f5f5
+}
+
+
+

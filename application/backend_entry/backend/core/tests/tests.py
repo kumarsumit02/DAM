@@ -1,4 +1,4 @@
-class createAsset():
+class CreateAsset():
   es_config = {
       "settings": {
           "index.max_ngram_diff": 18,
@@ -90,7 +90,7 @@ class createAsset():
     self.params = params
 
 
-class createFolders():
+class CreateFolders():
   es_config = {
       "settings": {
           "index.max_ngram_diff": 18,
@@ -154,10 +154,18 @@ class createFolders():
     self.params = params
 
 
-class deleteFolders():
+class DeleteFolders():
   es_config = {
-      'index_name': 'asset',
-      'type_name': 'assets'
+      'index_name': 'folder',
+      'type_name': 'folders'
   }
+  def __init__(self, params):
+    self.params = params
+class DeleteAssetsInFolders():
+  es_config = {
+    'index_name':'asset'
+    'type_name':'assets'
+  }
+
   def __init__(self, params):
     self.params = params

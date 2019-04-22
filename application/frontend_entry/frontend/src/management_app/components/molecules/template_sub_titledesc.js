@@ -8,10 +8,6 @@ import {TemplateDesc} from '../atoms/subtitle/'
 
 
 export class TemplateTitleDesc extends Component{
-	
-	constructor(props){
-		super(props)
-	}
 
 	componentWillReceiveProps = async(nextProps) => {
 		this.props = nextProps

@@ -9,6 +9,7 @@ urlpatterns = [
     # re_path('create/$', views.Create_Assets , name='create_asset'),
     url('asset/', views.UploadAsset.as_view()),
     url('comment/', views.Comments.as_view()),
+    url('tags/', views.Tag.as_view()),
 ]
 
 

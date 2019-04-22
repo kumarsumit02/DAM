@@ -6,6 +6,7 @@ import CircularProgressbar from 'react-circular-progressbar';
 import {Redirect} from 'react-router'
 import upload from "/application/frontend/src/dams/images/upload.png";
 import generalimage from "/application/frontend/src/dams/images/generaldoc.png";
+import {urls} from '/application/frontend/src/dams/routes/apiRoutes'
 
 
 export class AddAsset extends Component {
@@ -27,12 +28,15 @@ export class AddAsset extends Component {
       item: 1,
       total_files: null,
       redirect: false,
+      files_uploaded:0,
     };
+    this.url=urls
   }
 
   componentDidMount(){
     
-    let storeURL = (`http://localhost:8000/folders/?id=${this.props.match.params.id}`)
+    //let storeURL = (`http://localhost:8000/folders/?id=${this.props.match.params.id}`)
+    let storeURL = this.url.get_folder + this.props.match.params.id
     fetch(storeURL).then(response => response.json()).then(response => {
     this.setState(
       {
@@ -49,17 +53,19 @@ export class AddAsset extends Component {
       upload_failed: null,
       item: 1,
       progres_bar_display: true,
+      files_uploaded:0,
       
     })
     let file = this.state.file;
     let progress = 100 /file.length;
-    console.log("File" , this.state.file.length);
+    //console.log("File" , this.state.file.length);
+    
     file.map((singlefile,index) => {
       let formData = new FormData();
       formData.append("file", singlefile)
       //console.log("add",this.state.folder_id);
       formData.append("folder_id", this.state.folder_id)
-       fetch("http://localhost:8000/asset_management/asset/", {
+       fetch(this.url.edit_asset , {
         method: 'POST',
         body: formData
       }).then( (response) => { 
@@ -68,11 +74,12 @@ export class AddAsset extends Component {
     }).then((json_response) => {
           
             if(json_response[0].id) {
-            
+               delete this.state.file[index]
                this.setState({ 
                 progress_percent: (this.state.item) * progress, 
                 total_files: this.state.item, 
                 item: this.state.item+1,
+                files_uploaded: this.state.files_uploaded+1,
               });
               if(this.state.total_files === this.state.file.length) {
                 if(this.state.file.length == 1) {
@@ -188,8 +195,11 @@ export class AddAsset extends Component {
                                         text={`${this.state.progress_percent}%`}
                                                     /> 
                                     <div>
+                                       <h3> Total files uploaded : {this.state.files_uploaded} </h3>
+                                    </div>
+                                    <div>
                                       {
-                                        this.state.succuss ? <h2> File Uploaded Succussfully !</h2>
+                                        this.state.succuss ? <h2> File Uploaded Successfully !</h2>
                                         :  this.state.upload_failed ? <h2> Error!</h2> : null
                                        }
                                         
